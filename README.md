@@ -27,11 +27,13 @@
   <a href="https://github.com/calcom/cal.com/stargazers"><img src="https://img.shields.io/github/stars/calcom/cal.com" alt="Github Stars"></a>
   <a href="https://news.ycombinator.com/item?id=26817795"><img src="https://img.shields.io/badge/Hacker%20News-311-%23FF6600" alt="Hacker News"></a>
   <a href="https://github.com/calcom/cal.com/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-purple" alt="License"></a>
-  <img src="https://img.shields.io/github/package-json/v/calcom/cal.com">
   <a href="https://github.com/calcom/cal.com/pulse"><img src="https://img.shields.io/github/commit-activity/m/calcom/cal.com" alt="Commits-per-month"></a>
   <a href="https://cal.com/pricing"><img src="https://img.shields.io/badge/Pricing-%2412%2Fmonth-brightgreen" alt="Pricing"></a>
   <a href="https://jitsu.com?utm_source=github/calcom/cal.com"><img src="https://img.shields.io/badge/Metrics_tracked_by-JITSU-AA00FF?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACKSURBVHgBrZDRCYAwDEQv6gCOoKO4hOCXI9QVnEZwiY5iF5GaVClaBNtioCSUvCR3tMJaxIfZgW4AGUoEPVwgPZoS0Dmgg3NBVDFNbMIsmYCak3J1jDk9iCQvsKJvkzr71N81Gj6vDT/LU2P6RhY63jcafk3YJEbgeZpiFyc/5HJKv8Ef273NSfABGbQfUZhnOSAAAAAASUVORK5CYII=" alt="Jitsu Tracked"></a>
-
+    <a href="https://hub.docker.com/r/calendso/calendso"><img src="https://img.shields.io/docker/pulls/calendso/calendso"></a>
+    <a href="https://twitter.com/calcom"><img src="https://img.shields.io/twitter/follow/calcom?style=social"></a>
+    <a href="https://calendso.slack.com/archives/C02BY67GMMW"><img src="https://img.shields.io/badge/translations-contribute-brightgreen" /></a>
+    <a href="https://www.contributor-covenant.org/version/1/4/code-of-conduct/ "><img src="https://img.shields.io/badge/Contributor%20Covenant-1.4-purple" /></a>
 </p>
 
 <!-- ABOUT THE PROJECT -->
@@ -66,7 +68,7 @@ That's where Cal.com comes in. Self-hosted or hosted by us. White-label by desig
 
 Cal officially launched as v.1.0 on 15th of September, however a lot of new features are coming. Watch **releases** of this repository to be notified for future updates:
 
-![cal-star-github](https://user-images.githubusercontent.com/8019099/116010176-5d9c9900-a615-11eb-92d0-aa0e892f7056.gif)
+![cal-star-github](https://user-images.githubusercontent.com/8019099/154853944-a9e3c999-3da3-4048-b149-b4f73893c6fb.gif)
 
 <!-- GETTING STARTED -->
 
@@ -78,7 +80,7 @@ To get a local copy up and running, please follow these simple steps.
 
 Here is what you need to be able to run Cal.
 
-- Node.js
+- Node.js (Version: >=14.x <15)
 - PostgreSQL
 - Yarn _(recommended)_
 
@@ -88,7 +90,7 @@ Here is what you need to be able to run Cal.
 
 ### Setup
 
-1. Clone the repo
+1. Clone the repo into a public GitHub repository (to comply with AGPLv3. To clone in a private repository, [acquire a commercial license](https://cal.com/sales))
 
    ```sh
    git clone https://github.com/calcom/cal.com.git
@@ -100,17 +102,13 @@ Here is what you need to be able to run Cal.
    cd cal.com
    ```
 
-1. Copy `.env.example` to `.env`
-
-   ```sh
-   cp .env.example .env
-   ```
-
 1. Install packages with yarn
 
    ```sh
    yarn
    ```
+
+1. Use `openssl rand -base64 32` to generate a key and add it under `NEXTAUTH_SECRET` in the .env file.
 
 #### Quick start with `yarn dx`
 
@@ -119,6 +117,14 @@ Here is what you need to be able to run Cal.
 
 ```sh
 yarn dx
+```
+
+#### Development tip
+
+> Add `NEXT_PUBLIC_DEBUG=1` anywhere in your `.env` to get logging information for all the queries and mutations driven by **trpc**.
+
+```sh
+echo 'NEXT_PUBLIC_DEBUG=1' >> .env
 ```
 
 #### Manual setup
@@ -157,10 +163,10 @@ yarn dx
    </details>
 
 1. Set a 32 character random string in your .env file for the `CALENDSO_ENCRYPTION_KEY` (You can use a command like `openssl rand -base64 24` to generate one).
-1. Set up the database using the Prisma schema (found in `prisma/schema.prisma`)
+1. Set up the database using the Prisma schema (found in `apps/web/prisma/schema.prisma`)
 
    ```sh
-   npx prisma migrate deploy
+   yarn workspace @calcom/prisma db-deploy
    ```
 
 1. Run (in development mode)
@@ -174,21 +180,24 @@ yarn dx
 1. Open [Prisma Studio](https://www.prisma.io/studio) to look at or modify the database content:
 
    ```sh
-   npx prisma studio
+   yarn db-studio
    ```
 
 1. Click on the `User` model to add a new user record.
 1. Fill out the fields `email`, `username`, `password`, and set `metadata` to empty `{}` (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/)) and click `Save 1 Record` to create your first user.
-   > New users are set on a `TRIAL` plan by default. You might want to adjust this behavior to your needs in the `prisma/schema.prisma` file.
+   > New users are set on a `TRIAL` plan by default. You might want to adjust this behavior to your needs in the `apps/web/prisma/schema.prisma` file.
 1. Open a browser to [http://localhost:3000](http://localhost:3000) and login with your just created, first user.
 
 ### E2E-Testing
 
+Be sure to set the environment variable `NEXTAUTH_URL` to the correct value. If you are running locally, as the documentation within `.env.example` mentions, the value should be `http://localhost:3000`.
+
 ```sh
-# In first terminal
-yarn dx
-# In second terminal
-yarn test-playwright
+# In a terminal just run:
+yarn test-e2e
+
+# To open last HTML report run:
+yarn workspace @calcom/web playwright-report
 ```
 
 ### Upgrading from earlier versions
@@ -199,12 +208,18 @@ yarn test-playwright
    git pull
    ```
 
-2. Apply database migrations by running <b>one of</b> the following commands:
+1. Check if dependencies got added/updated/removed
+
+   ```sh
+   yarn
+   ```
+
+1. Apply database migrations by running <b>one of</b> the following commands:
 
    In a development environment, run:
 
    ```sh
-   npx prisma migrate dev
+   yarn workspace @calcom/prisma db-migrate
    ```
 
    (this can clear your development database in some cases)
@@ -212,19 +227,16 @@ yarn test-playwright
    In a production environment, run:
 
    ```sh
-   npx prisma migrate deploy
+   yarn workspace @calcom/prisma db-deploy
    ```
 
-3. Check the `.env.example` and compare it to your current `.env` file. In case there are any fields not present
-   in your current `.env`, add them there.
+1. Check for `.env` variables changes
 
-   For the current version, especially check if the variable `BASE_URL` is present and properly set in your environment, for example:
-
-   ```
-   BASE_URL='https://yourdomain.com'
+   ```sh
+   yarn predev
    ```
 
-4. Start the server. In a development environment, just do:
+1. Start the server. In a development environment, just do:
 
    ```sh
    yarn dev
@@ -237,7 +249,7 @@ yarn test-playwright
    yarn start
    ```
 
-5. Enjoy the new version.
+1. Enjoy the new version.
 <!-- DEPLOYMENT -->
 
 ## Deployment
@@ -266,20 +278,17 @@ You can deploy Cal on [Railway](https://railway.app/) using the button above. Th
 
 ## Roadmap
 
-See the [open issues](https://github.com/calcom/cal.com/issues) for a list of proposed features (and known issues).
+See the [roadmap project](https://github.com/orgs/calcom/projects/1) for a list of proposed features (and known issues). You can change the view to see planned tagged releases.
 
 <!-- CONTRIBUTING -->
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Please see our [contributing guide](/CONTRIBUTING.md).
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-5. Push to the branch (`git push origin feature/AmazingFeature`)
-6. Open a pull request
+### Good First Issues
+
+We have a list of [good first issues](https://github.com/calcom/cal.com/labels/✅%20good%20first%20issue) that contain bugs which have a relatively limited scope. This is a great place to get started, gain experience, and get familiar with our contribution process.
 
 ## Integrations
 
@@ -306,6 +315,57 @@ Contributions are what make the open source community such an amazing place to b
 5. Use **Application (client) ID** as the **MS_GRAPH_CLIENT_ID** attribute value in .env
 6. Click **Certificates & secrets** create a new client secret and use the value as the **MS_GRAPH_CLIENT_SECRET** attribute
 
+### Obtaining Slack Client ID and Secret and Signing Secret
+
+To test this you will need to create a Slack app for yourself on [their apps website](https://api.slack.com/apps).
+
+Copy and paste the app manifest below into the setting on your slack app. Be sure to replace `YOUR_DOMAIN` with your own domain or your proxy host if you're testing locally.
+
+<details>
+  <summary>App Manifest</summary>
+  
+ ```yaml
+ display_information:
+  name: Cal.com Slack
+features:
+  bot_user:
+    display_name: Cal.com Slack
+    always_online: false
+  slash_commands:
+    - command: /create-event
+      url: https://YOUR_DOMAIN/api/integrations/slackmessaging/commandHandler
+      description: Create an event within Cal!
+      should_escape: false
+    - command: /today
+      url: https://YOUR_DOMAIN/api/integrations/slackmessaging/commandHandler
+      description: View all your bookings for today
+      should_escape: false
+oauth_config:
+  redirect_urls:
+    - https://YOUR_DOMAIN/api/integrations/slackmessaging/callback
+  scopes:
+    bot:
+      - chat:write
+      - commands
+      - chat:write.public 
+settings:
+  interactivity:
+    is_enabled: true
+    request_url: https://YOUR_DOMAIN/api/integrations/slackmessaging/interactiveHandler
+    message_menu_options_url: https://YOUR_DOMAIN/api/integrations/slackmessaging/interactiveHandler
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
+```
+
+</details>
+
+Add the integration as normal - slack app - add. Follow the oauth flow to add it to a server.
+
+Next make sure you have your app running `yarn dx`. Then in the slack chat type one of these commands: `/create-event` or `/today`
+
+> NOTE: Next you will need to setup a proxy server like [ngrok](https://ngrok.com/) to allow your local host machine to be hosted on a public https server.
+
 ### Obtaining Zoom Client ID and Secret
 
 1. Open [Zoom Marketplace](https://marketplace.zoom.us/) and sign in with your Zoom account.
@@ -328,6 +388,31 @@ Contributions are what make the open source community such an amazing place to b
 2. From within your dashboard, go to the [developers](https://dashboard.daily.co/developers) tab.
 3. Copy your API key.
 4. Now paste the API key to your .env file into the `DAILY_API_KEY` field in your .env file.
+5. If you have the [Daily Scale Plan](https://www.daily.co/pricing) set the `DAILY_SCALE_PLAN` variable to `true` in order to use features like video recording.
+
+### Obtaining HubSpot Client ID and Secret
+
+1. Open [HubSpot Developer](https://developer.hubspot.com/) and sign into your account, or create a new one.
+2. From within the home of the Developer account page, go to "Manage apps".
+3. Click "Create app" button top right.
+4. Fill in any information you want in the "App info" tab
+5. Go to tab "Auth"
+6. Now copy the Client ID and Client Secret to your .env file into the `HUBSPOT_CLIENT_ID` and `HUBSPOT_CLIENT_SECRET` fields.
+7. Set the Redirect URL for OAuth `<Cal.com URL>/api/integrations/hubspot othercalendar/callback` replacing Cal.com URL with the URI at which your application runs.
+8. In the "Scopes" section at the bottom of the page, make sure you select "Read" and "Write" for scope called `crm.objects.contacts`
+9. Click the "Save" button at the bottom footer.
+10. You're good to go. Now you can see any booking in Cal.com created as a meeting in HubSpot for your contacts.
+
+### Obtaining Vital API Keys
+
+1. Open [Vital](https://tryvital.io/) and click Get API Keys.
+1. Create a team with the team name you desire
+1. Head to the configuration section on the sidebar of the dashboard
+1. Click on API keys and you'll find your sandbox `api_key`.
+1. Copy your `api_key` to `VITAL_API_KEY` in the .env.appStore file.
+1. Open [Vital Webhooks](https://app.tryvital.io/team/{team_id}/webhooks) and add `<CALCOM BASE URL>/api/integrations/vital/webhook` as webhook for connected applications.
+1. Select all events for the webhook you interested, e.g. `sleep_created`
+1. Copy the webhook secret (`sec...`) to `VITAL_WEBHOOK_SECRET` in the .env.appStore file.
 
 <!-- LICENSE -->
 
@@ -349,6 +434,6 @@ Special thanks to these amazing projects which help power Cal.com:
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Prisma](https://prisma.io/)
 
-[<img src="https://jitsu.com/img/powered-by-jitsu.png?gh=true">](https://jitsu.com/?utm_source=cal.com-gihub)
+<a href="https://jitsu.com/?utm_source=cal.com-gihub"><img height="40px" src="https://jitsu.com/img/powered-by-jitsu.png?gh=true" alt="Jitsu.com"></a>
 
-Cal.com is an [open startup](https://jitsu.com) and [Jitsu](https://github.com/jitsucom/jitsu) (an open-source Segment alternative) helps us to track most of the usage metrics.
+Cal.com is an [open startup](https://cal.com/open) and [Jitsu](https://github.com/jitsucom/jitsu) (an open-source Segment alternative) helps us to track most of the usage metrics.
