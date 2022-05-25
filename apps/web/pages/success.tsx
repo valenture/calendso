@@ -444,9 +444,9 @@ export default function Success(props: SuccessProps) {
                                 .format("YYYYMMDDTHHmmss[Z]")}&text=${eventName}&details=${
                                 props.eventType.description
                               }` +
-                              (typeof location === "string"
-                                ? "&location=" + encodeURIComponent(location)
-                                : "") +
+                              // (typeof location === "string"
+                              //   ? "&location=" + encodeURIComponent(location)
+                              //   : "") +
                               (props.eventType.recurringEvent
                                 ? "&recur=" +
                                   encodeURIComponent(new RRule(props.eventType.recurringEvent).toString())
@@ -474,7 +474,7 @@ export default function Success(props: SuccessProps) {
                                   date.utc().format() +
                                   "&subject=" +
                                   eventName
-                              ) + (location ? "&location=" + location : "")
+                              )// + (location ? "&location=" + location : "")
                             }>
                             <a
                               className="mx-2 h-10 w-10 rounded-sm border border-neutral-200 px-3 py-2 dark:border-neutral-700 dark:text-white"
@@ -500,7 +500,7 @@ export default function Success(props: SuccessProps) {
                                   date.utc().format() +
                                   "&subject=" +
                                   eventName
-                              ) + (location ? "&location=" + location : "")
+                              )// + (location ? "&location=" + location : "")
                             }>
                             <a
                               className="mx-2 h-10 w-10 rounded-sm border border-neutral-200 px-3 py-2 dark:border-neutral-700 dark:text-white"
@@ -573,7 +573,7 @@ export default function Success(props: SuccessProps) {
             ${needsConfirmation ? t("submitted") : `${t("meeting_is_scheduled")}.`}
                ${getTitle()} ${t("what")}: ${eventName}`}
             where={`${t("where")}: ${
-              location ? (location?.startsWith("http") ? { location } : location) : "Far far a way galaxy"
+              "Far far a way galaxy"
             }`}
             when={`${t("when")}: ${props.recurringBookings ? t("starting") : ""} ${date.format(
               "dddd, DD MMMM YYYY"
