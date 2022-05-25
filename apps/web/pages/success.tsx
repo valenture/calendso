@@ -153,7 +153,7 @@ export default function Success(props: SuccessProps) {
     name, 
     reschedule 
   } = router.query;
-  const location = Array.isArray(_location) ? _location[0] : _location;
+  //const location = Array.isArray(_location) ? _location[0] : _location;
   const [is24h, setIs24h] = useState(isBrowserLocale24h());
   const { data: session } = useSession();
 
