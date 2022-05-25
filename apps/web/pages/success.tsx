@@ -403,7 +403,7 @@ export default function Success(props: SuccessProps) {
                         </div>
                       </div>
                     </div>
-                    {/* {!needsConfirmation &&
+                    {!needsConfirmation &&
                       (!isCancellationMode ? (
                         <div className="border-bookinglightest text-bookingdark mt-2 grid grid-cols-3 border-b py-4 text-left dark:border-gray-900">
                           <span className="flex self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
@@ -427,10 +427,10 @@ export default function Success(props: SuccessProps) {
                           setIsCancellationMode={setIsCancellationMode}
                           theme={userIsOwner ? "light" : props.profile.theme}
                         />
-                      ))} */}
+                      ))}
                     {userIsOwner && !needsConfirmation && !isCancellationMode && (
                       <div className="border-bookinglightest mt-9 flex border-b pt-2 pb-4 text-center dark:border-gray-900 sm:mt-0 sm:pt-4">
-                        <span className="flex self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
+                        <span className="flex self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50 hidden">
                           {t("add_to_calendar")}
                         </span>
                         <div className="-ml-16 flex flex-grow justify-center text-center">
