@@ -292,7 +292,7 @@ const AvailabilityPage = ({ profile, plan, eventType, workingHours, previousPage
                     {eventType.title}
                   </h1>
                   {eventType?.description && (
-                    <p className="text-bookinglight mb-3 dark:text-white whitespace-pre-line">
+                    <p className="text-bookinglight mb-3 whitespace-pre-line dark:text-white">
                       <InformationCircleIcon className="mr-[10px] ml-[2px] -mt-1 inline-block h-4 w-4 text-gray-400" />
                       {eventType.description}
                     </p>

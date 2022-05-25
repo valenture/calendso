@@ -148,12 +148,8 @@ type SuccessProps = inferSSRProps<typeof getServerSideProps>;
 export default function Success(props: SuccessProps) {
   const { t } = useLocale();
   const router = useRouter();
-  const { 
-    //location: _location, 
-    name, 
-    reschedule 
-  } = router.query;
-  //const location = Array.isArray(_location) ? _location[0] : _location;
+  const { location: _location, name, reschedule } = router.query;
+  const location = Array.isArray(_location) ? _location[0] : _location;
   const [is24h, setIs24h] = useState(isBrowserLocale24h());
   const { data: session } = useSession();
 
@@ -430,7 +426,7 @@ export default function Success(props: SuccessProps) {
                       ))}
                     {userIsOwner && !needsConfirmation && !isCancellationMode && (
                       <div className="border-bookinglightest mt-9 flex border-b pt-2 pb-4 text-center dark:border-gray-900 sm:mt-0 sm:pt-4">
-                        <span className="flex self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50 hidden">
+                        <span className="flex hidden self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
                           {t("add_to_calendar")}
                         </span>
                         <div className="-ml-16 flex flex-grow justify-center text-center">
@@ -464,18 +460,16 @@ export default function Success(props: SuccessProps) {
                             </a>
                           </Link>
                           <Link
-                            href={
-                              encodeURI(
-                                "https://outlook.live.com/calendar/0/deeplink/compose?body=" +
-                                  props.eventType.description +
-                                  "&enddt=" +
-                                  date.add(props.eventType.length, "minute").utc().format() +
-                                  "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
-                                  date.utc().format() +
-                                  "&subject=" +
-                                  eventName
-                              )// + (location ? "&location=" + location : "")
-                            }>
+                            href={encodeURI(
+                              "https://outlook.live.com/calendar/0/deeplink/compose?body=" +
+                                props.eventType.description +
+                                "&enddt=" +
+                                date.add(props.eventType.length, "minute").utc().format() +
+                                "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
+                                date.utc().format() +
+                                "&subject=" +
+                                eventName
+                            )}>
                             <a
                               className="mx-2 h-10 w-10 rounded-sm border border-neutral-200 px-3 py-2 dark:border-neutral-700 dark:text-white"
                               target="_blank">
@@ -490,18 +484,16 @@ export default function Success(props: SuccessProps) {
                             </a>
                           </Link>
                           <Link
-                            href={
-                              encodeURI(
-                                "https://outlook.office.com/calendar/0/deeplink/compose?body=" +
-                                  props.eventType.description +
-                                  "&enddt=" +
-                                  date.add(props.eventType.length, "minute").utc().format() +
-                                  "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
-                                  date.utc().format() +
-                                  "&subject=" +
-                                  eventName
-                              )// + (location ? "&location=" + location : "")
-                            }>
+                            href={encodeURI(
+                              "https://outlook.office.com/calendar/0/deeplink/compose?body=" +
+                                props.eventType.description +
+                                "&enddt=" +
+                                date.add(props.eventType.length, "minute").utc().format() +
+                                "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
+                                date.utc().format() +
+                                "&subject=" +
+                                eventName
+                            )}>
                             <a
                               className="mx-2 h-10 w-10 rounded-sm border border-neutral-200 px-3 py-2 dark:border-neutral-700 dark:text-white"
                               target="_blank">
@@ -572,9 +564,7 @@ export default function Success(props: SuccessProps) {
             what={`
             ${needsConfirmation ? t("submitted") : `${t("meeting_is_scheduled")}.`}
                ${getTitle()} ${t("what")}: ${eventName}`}
-            where={`${t("where")}: ${
-              "Far far a way galaxy"
-            }`}
+            where={`${t("where")}: "Far far a way galaxy"`}
             when={`${t("when")}: ${props.recurringBookings ? t("starting") : ""} ${date.format(
               "dddd, DD MMMM YYYY"
             )} ${date.format(is24h ? "H:mm" : "h:mma")} - ${props.eventType.length} mins (${
