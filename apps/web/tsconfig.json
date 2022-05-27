@@ -8,7 +8,8 @@
       "@server/*": ["server/*"],
       "@ee/*": ["ee/*"],
       "@prisma/client/*": ["@calcom/prisma/client/*"]
-    }
+    },
+    "noImplicitAny": false
   },
   "include": [
     "next-env.d.ts",

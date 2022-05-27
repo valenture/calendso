@@ -50,7 +50,7 @@ export default function Bookings() {
   // Get the recurrentCount value from the grouped recurring bookings
   // created with the same recurringEventId
   const defineRecurrentCount = (booking: BookingOutput, page: BookingPage) => {
-    let recurringCount = undefined;
+    let recurringCount = 0;
     if (booking.recurringEventId !== null) {
       recurringCount = page.groupedRecurringBookings.filter(
         (group) => group.recurringEventId === booking.recurringEventId
