@@ -65,7 +65,7 @@ tsconfig.tsbuildinfo
 .turbo
 
 # Prisma-Zod
-packages/prisma/zod/*.ts
+#packages/prisma/zod/*.ts
 
 # Builds
 dist
