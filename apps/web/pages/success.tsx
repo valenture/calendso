@@ -148,10 +148,10 @@ type SuccessProps = inferSSRProps<typeof getServerSideProps>;
 export default function Success(props: SuccessProps) {
   const { t } = useLocale();
   const router = useRouter();
-  const { 
-    //location: _location, 
-    name, 
-    reschedule 
+  const {
+    //location: _location,
+    name,
+    reschedule,
   } = router.query;
   //const location = Array.isArray(_location) ? _location[0] : _location;
   const [is24h, setIs24h] = useState(isBrowserLocale24h());
