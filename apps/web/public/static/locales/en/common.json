@@ -236,7 +236,7 @@
   "where": "Where",
   "add_to_calendar": "Add to calendar",
   "other": "Other",
-  "emailed_you_and_attendees": "We emailed you and the other attendees a calendar invitation with all the details.",
+  "emailed_you_and_attendees": "We emailed you a calendar invitation with all the details.",
   "emailed_you_and_attendees_recurring": "We emailed you and the other attendees a calendar invitation for the first of these recurring events.",
   "emailed_you_and_any_other_attendees": "You and any other attendees have been emailed with this information.",
   "needs_to_be_confirmed_or_rejected": "Your booking still needs to be confirmed or rejected.",

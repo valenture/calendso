@@ -265,7 +265,7 @@ export default function Success(props: SuccessProps) {
           className={isEmbed ? "" : "h-screen bg-neutral-100 dark:bg-neutral-900"}
           data-testid="success-page">
           {userIsOwner && !isEmbed && (
-            <div className="-mb-7 ml-9 mt-7">
+            <div className="-mb-7 ml-9 mt-7 hidden">
               <Link href="/bookings">
                 <a className="flex items-center text-black dark:text-white">
                   <ArrowLeftIcon className="mr-1 h-4 w-4" /> {t("back_to_bookings")}
@@ -341,8 +341,8 @@ export default function Success(props: SuccessProps) {
                               is24h={is24h}
                             />
                           </div>
-                          <div className="font-medium">{t("who")}</div>
-                          <div className="col-span-2 mb-6">
+                          <div className="hidden font-medium">{t("who")}</div>
+                          <div className="col-span-2 mb-6 hidden">
                             {bookingInfo?.user && (
                               <div className="mb-3">
                                 <p>{bookingInfo.user.name}</p>
@@ -374,8 +374,8 @@ export default function Success(props: SuccessProps) {
                           )} */}
                           {bookingInfo?.description && (
                             <>
-                              <div className="mt-9 font-medium">{t("additional_notes")}</div>
-                              <div className="col-span-2 mb-2 mt-9">
+                              <div className="mt-9 hidden font-medium">{t("additional_notes")}</div>
+                              <div className="col-span-2 mb-2 mt-9 hidden">
                                 <p>{bookingInfo.description}</p>
                               </div>
                             </>
@@ -405,7 +405,7 @@ export default function Success(props: SuccessProps) {
                     </div>
                     {!needsConfirmation &&
                       (!isCancellationMode ? (
-                        <div className="border-bookinglightest text-bookingdark mt-2 grid grid-cols-3 border-b py-4 text-left dark:border-gray-900">
+                        <div className="border-bookinglightest text-bookingdark mt-2 hidden grid-cols-3 border-b py-4 text-left dark:border-gray-900">
                           <span className="flex self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
                             {t("need_to_make_a_change")}
                           </span>
@@ -429,8 +429,8 @@ export default function Success(props: SuccessProps) {
                         />
                       ))}
                     {userIsOwner && !needsConfirmation && !isCancellationMode && (
-                      <div className="border-bookinglightest mt-9 flex border-b pt-2 pb-4 text-center dark:border-gray-900 sm:mt-0 sm:pt-4">
-                        <span className="flex hidden self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
+                      <div className="border-bookinglightest mt-9 hidden border-b pt-2 pb-4 text-center dark:border-gray-900 sm:mt-0 sm:pt-4">
+                        <span className="hidden self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
                           {t("add_to_calendar")}
                         </span>
                         <div className="-ml-16 flex flex-grow justify-center text-center">
@@ -530,7 +530,7 @@ export default function Success(props: SuccessProps) {
                       </div>
                     )}
                     {!(userIsOwner || props.hideBranding) && (
-                      <div className="border-bookinglightest text-booking-lighter pt-4 text-center text-xs dark:border-gray-900 dark:text-white">
+                      <div className="border-bookinglightest text-booking-lighter hidden pt-4 text-center text-xs dark:border-gray-900 dark:text-white">
                         <a href="https://cal.com/signup">{t("create_booking_link_with_calcom")}</a>
 
                         <form
