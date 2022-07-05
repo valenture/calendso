@@ -257,8 +257,8 @@ const BookingPage = ({
 
     const customInputType = booking.customInputs;
     return {
-      name: primaryAttendee.name || "",
-      email: primaryAttendee.email || "",
+      name: "",
+      email: "",
       guests: guestListEmails,
       notes: booking.description || "",
       rescheduleReason: "",
@@ -573,7 +573,7 @@ const BookingPage = ({
               </div>
               <div className="sm:w-1/2 sm:pl-8 sm:pr-4">
                 <Form form={bookingForm} handleSubmit={bookEvent}>
-                  <div className="mb-4">
+                  <div className={"mb-4 " + (router.query.name != null ? "" : "")}>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-white">
                       {t("your_name")}
                     </label>
@@ -590,7 +590,7 @@ const BookingPage = ({
                       />
                     </div>
                   </div>
-                  <div className="mb-4">
+                  <div className={"mb-4 " + (router.query.email != null ? "" : "")}>
                     <label
                       htmlFor="email"
                       className="block text-sm font-medium text-gray-700 dark:text-white">

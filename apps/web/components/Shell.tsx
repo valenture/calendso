@@ -28,7 +28,7 @@ import Dropdown, {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@calcom/ui/Dropdown";
-import LicenseBanner from "@ee/components/LicenseBanner";
+//import LicenseBanner from "@ee/components/LicenseBanner";
 import TrialBanner from "@ee/components/TrialBanner";
 import HelpMenuItem from "@ee/components/support/HelpMenuItem";
 
@@ -388,7 +388,7 @@ const Layout = ({
               {/* add padding to content for mobile navigation*/}
               <div className="block pt-12 md:hidden" />
             </div>
-            <LicenseBanner />
+            {/*<LicenseBanner />*/}
           </main>
         </div>
       </div>

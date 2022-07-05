@@ -203,34 +203,34 @@ export default function Success(props: SuccessProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventType, needsConfirmation]);
 
-  function eventLink(): string {
-    const optional: { location?: string } = {};
-    if (location) {
-      optional["location"] = location;
-    }
+  // function eventLink(): string {
+  //   const optional: { location?: string } = {};
+  //   if (location) {
+  //     optional["location"] = location;
+  //   }
 
-    const event = createEvent({
-      start: [
-        date.toDate().getUTCFullYear(),
-        (date.toDate().getUTCMonth() as number) + 1,
-        date.toDate().getUTCDate(),
-        date.toDate().getUTCHours(),
-        date.toDate().getUTCMinutes(),
-      ],
-      startInputType: "utc",
-      title: eventName,
-      description: props.eventType.description ? props.eventType.description : undefined,
-      /** formatted to required type of description ^ */
-      duration: { minutes: props.eventType.length },
-      ...optional,
-    });
+  //   const event = createEvent({
+  //     start: [
+  //       date.toDate().getUTCFullYear(),
+  //       (date.toDate().getUTCMonth() as number) + 1,
+  //       date.toDate().getUTCDate(),
+  //       date.toDate().getUTCHours(),
+  //       date.toDate().getUTCMinutes(),
+  //     ],
+  //     startInputType: "utc",
+  //     title: eventName,
+  //     description: props.eventType.description ? props.eventType.description : undefined,
+  //     /** formatted to required type of description ^ */
+  //     duration: { minutes: props.eventType.length },
+  //     ...optional,
+  //   });
 
-    if (event.error) {
-      throw event.error;
-    }
+  //   if (event.error) {
+  //     throw event.error;
+  //   }
 
-    return encodeURIComponent(event.value ? event.value : false);
-  }
+  //   return encodeURIComponent(event.value ? event.value : false);
+  // }
 
   function getTitle(): string {
     const titleSuffix = props.recurringBookings ? "_recurring" : "";
@@ -341,8 +341,8 @@ export default function Success(props: SuccessProps) {
                         </div>
                         {(bookingInfo?.user || bookingInfo?.attendees) && (
                           <>
-                            <div className="font-medium">{t("who")}</div>
-                            <div className="col-span-2 mb-6">
+                            <div className="hidden font-medium">{t("who")}</div>
+                            <div className="col-span-2 mb-6 hidden">
                               {bookingInfo?.user && (
                                 <div className="mb-3">
                                   <p>{bookingInfo.user.name}</p>
@@ -377,7 +377,7 @@ export default function Success(props: SuccessProps) {
                         {bookingInfo?.description && (
                           <>
                             <div className="mt-9 font-medium">{t("additional_notes")}</div>
-                            <div className="col-span-2 mb-2 mt-9">
+                            <div className="col-span-2 mb-2 mt-9 hidden">
                               <p>{bookingInfo.description}</p>
                             </div>
                           </>
@@ -408,7 +408,7 @@ export default function Success(props: SuccessProps) {
                   {!needsConfirmation &&
                     !isCancelled &&
                     (!isCancellationMode ? (
-                      <div className="border-bookinglightest text-bookingdark mt-2 grid-cols-3 border-b py-4 text-left dark:border-gray-900 sm:grid">
+                      <div className="border-bookinglightest text-bookingdark mt-2 hidden grid-cols-3 border-b py-4 text-left dark:border-gray-900 sm:grid">
                         <span className="font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
                           {t("need_to_make_a_change")}
                         </span>
@@ -437,7 +437,7 @@ export default function Success(props: SuccessProps) {
                       />
                     ))}
                   {userIsOwner && !needsConfirmation && !isCancellationMode && !isCancelled && (
-                    <div className="border-bookinglightest mt-9 flex border-b pt-2 pb-4 text-center dark:border-gray-900 sm:mt-0 sm:pt-4">
+                    <div className="border-bookinglightest mt-9 hidden border-b pt-2 pb-4 text-center dark:border-gray-900 sm:mt-0 sm:pt-4">
                       <span className="flex self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
                         {t("add_to_calendar")}
                       </span>
@@ -542,7 +542,7 @@ export default function Success(props: SuccessProps) {
                     </div>
                   )}
                   {session === null && !(userIsOwner || props.hideBranding) && (
-                    <div className="border-bookinglightest text-booking-lighter pt-4 text-center text-xs dark:border-gray-900 dark:text-white">
+                    <div className="border-bookinglightest text-booking-lighter hidden pt-4 text-center text-xs dark:border-gray-900 dark:text-white">
                       <a href="https://cal.com/signup">{t("create_booking_link_with_calcom")}</a>
 
                       <form
