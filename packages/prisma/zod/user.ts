@@ -41,9 +41,10 @@ export const _UserModel = z.object({
   darkBrandColor: z.string(),
   away: z.boolean(),
   allowDynamicBooking: z.boolean().nullish(),
-  metadata: jsonSchema,
+  metadata: imports.userMetadata,
   verified: z.boolean().nullish(),
   role: z.nativeEnum(UserPermissionRole),
+  disableImpersonation: z.boolean(),
 })
 
 export interface CompleteUser extends z.infer<typeof _UserModel> {

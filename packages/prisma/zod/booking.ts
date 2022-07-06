@@ -22,8 +22,6 @@ export const _BookingModel = z.object({
   location: z.string().nullish(),
   createdAt: z.date(),
   updatedAt: z.date().nullish(),
-  confirmed: z.boolean(),
-  rejected: z.boolean(),
   status: z.nativeEnum(BookingStatus),
   paid: z.boolean(),
   cancellationReason: z.string().nullish(),
