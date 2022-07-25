@@ -12,6 +12,7 @@ export const _BookingReferenceModel = z.object({
   bookingId: z.number().int().nullish(),
   externalCalendarId: z.string().nullish(),
   deleted: z.boolean().nullish(),
+  credentialId: z.number().int().nullish(),
 })
 
 export interface CompleteBookingReference extends z.infer<typeof _BookingReferenceModel> {

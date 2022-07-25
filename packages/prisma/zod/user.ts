@@ -1,7 +1,7 @@
 import * as z from "zod"
 import * as imports from "../zod-utils"
 import { IdentityProvider, UserPlan, UserPermissionRole } from "@prisma/client"
-import { CompleteEventType, EventTypeModel, CompleteCredential, CredentialModel, CompleteMembership, MembershipModel, CompleteBooking, BookingModel, CompleteSchedule, ScheduleModel, CompleteSelectedCalendar, SelectedCalendarModel, CompleteAvailability, AvailabilityModel, CompleteWebhook, WebhookModel, CompleteDestinationCalendar, DestinationCalendarModel, CompleteImpersonations, ImpersonationsModel, CompleteApiKey, ApiKeyModel, CompleteAccount, AccountModel, CompleteSession, SessionModel, CompleteFeedback, FeedbackModel } from "./index"
+import { CompleteEventType, EventTypeModel, CompleteCredential, CredentialModel, CompleteMembership, MembershipModel, CompleteBooking, BookingModel, CompleteSchedule, ScheduleModel, CompleteSelectedCalendar, SelectedCalendarModel, CompleteAvailability, AvailabilityModel, CompleteWebhook, WebhookModel, CompleteDestinationCalendar, DestinationCalendarModel, CompleteImpersonations, ImpersonationsModel, CompleteApiKey, ApiKeyModel, CompleteAccount, AccountModel, CompleteSession, SessionModel, CompleteWorkflow, WorkflowModel, CompleteApp_RoutingForms_Form, App_RoutingForms_FormModel, CompleteFeedback, FeedbackModel } from "./index"
 
 // Helper schema for JSON fields
 type Literal = boolean | number | string
@@ -41,9 +41,10 @@ export const _UserModel = z.object({
   darkBrandColor: z.string(),
   away: z.boolean(),
   allowDynamicBooking: z.boolean().nullish(),
-  metadata: jsonSchema,
+  metadata: imports.userMetadata,
   verified: z.boolean().nullish(),
   role: z.nativeEnum(UserPermissionRole),
+  disableImpersonation: z.boolean(),
 })
 
 export interface CompleteUser extends z.infer<typeof _UserModel> {
@@ -61,6 +62,8 @@ export interface CompleteUser extends z.infer<typeof _UserModel> {
   apiKeys: CompleteApiKey[]
   accounts: CompleteAccount[]
   sessions: CompleteSession[]
+  workflows: CompleteWorkflow[]
+  routingForms: CompleteApp_RoutingForms_Form[]
   Feedback: CompleteFeedback[]
 }
 
@@ -84,5 +87,7 @@ export const UserModel: z.ZodSchema<CompleteUser> = z.lazy(() => _UserModel.exte
   apiKeys: ApiKeyModel.array(),
   accounts: AccountModel.array(),
   sessions: SessionModel.array(),
+  workflows: WorkflowModel.array(),
+  routingForms: App_RoutingForms_FormModel.array(),
   Feedback: FeedbackModel.array(),
 }))

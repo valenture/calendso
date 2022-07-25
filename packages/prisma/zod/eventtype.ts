@@ -1,7 +1,7 @@
 import * as z from "zod"
 import * as imports from "../zod-utils"
 import { PeriodType, SchedulingType } from "@prisma/client"
-import { CompleteUser, UserModel, CompleteTeam, TeamModel, CompleteHashedLink, HashedLinkModel, CompleteBooking, BookingModel, CompleteAvailability, AvailabilityModel, CompleteWebhook, WebhookModel, CompleteDestinationCalendar, DestinationCalendarModel, CompleteEventTypeCustomInput, EventTypeCustomInputModel, CompleteSchedule, ScheduleModel } from "./index"
+import { CompleteUser, UserModel, CompleteTeam, TeamModel, CompleteHashedLink, HashedLinkModel, CompleteBooking, BookingModel, CompleteAvailability, AvailabilityModel, CompleteWebhook, WebhookModel, CompleteDestinationCalendar, DestinationCalendarModel, CompleteEventTypeCustomInput, EventTypeCustomInputModel, CompleteSchedule, ScheduleModel, CompleteWorkflowsOnEventTypes, WorkflowsOnEventTypesModel } from "./index"
 
 // Helper schema for JSON fields
 type Literal = boolean | number | string
@@ -28,7 +28,7 @@ export const _EventTypeModel = z.object({
   periodDays: z.number().int().nullish(),
   periodCountCalendarDays: z.boolean().nullish(),
   requiresConfirmation: z.boolean(),
-  recurringEvent: imports.recurringEvent,
+  recurringEvent: imports.recurringEventType,
   disableGuests: z.boolean(),
   hideCalendarNotes: z.boolean(),
   minimumBookingNotice: z.number().int(),
@@ -36,6 +36,7 @@ export const _EventTypeModel = z.object({
   afterEventBuffer: z.number().int(),
   seatsPerTimeSlot: z.number().int().nullish(),
   schedulingType: z.nativeEnum(SchedulingType).nullish(),
+  scheduleId: z.number().int().nullish(),
   price: z.number().int(),
   currency: z.string(),
   slotInterval: z.number().int().nullish(),
@@ -53,6 +54,7 @@ export interface CompleteEventType extends z.infer<typeof _EventTypeModel> {
   destinationCalendar?: CompleteDestinationCalendar | null
   customInputs: CompleteEventTypeCustomInput[]
   schedule?: CompleteSchedule | null
+  workflows: CompleteWorkflowsOnEventTypes[]
 }
 
 /**
@@ -70,4 +72,5 @@ export const EventTypeModel: z.ZodSchema<CompleteEventType> = z.lazy(() => _Even
   destinationCalendar: DestinationCalendarModel.nullish(),
   customInputs: EventTypeCustomInputModel.array(),
   schedule: ScheduleModel.nullish(),
+  workflows: WorkflowsOnEventTypesModel.array(),
 }))

@@ -1,6 +1,6 @@
 import * as z from "zod"
 import * as imports from "../zod-utils"
-import { CompleteUser, UserModel, CompleteApp, AppModel } from "./index"
+import { CompleteUser, UserModel, CompleteApp, AppModel, CompleteDestinationCalendar, DestinationCalendarModel } from "./index"
 
 // Helper schema for JSON fields
 type Literal = boolean | number | string
@@ -19,6 +19,7 @@ export const _CredentialModel = z.object({
 export interface CompleteCredential extends z.infer<typeof _CredentialModel> {
   user?: CompleteUser | null
   app?: CompleteApp | null
+  destinationCalendars: CompleteDestinationCalendar[]
 }
 
 /**
@@ -29,4 +30,5 @@ export interface CompleteCredential extends z.infer<typeof _CredentialModel> {
 export const CredentialModel: z.ZodSchema<CompleteCredential> = z.lazy(() => _CredentialModel.extend({
   user: UserModel.nullish(),
   app: AppModel.nullish(),
+  destinationCalendars: DestinationCalendarModel.array(),
 }))

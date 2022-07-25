@@ -1,7 +1,7 @@
 import * as z from "zod"
 import * as imports from "../zod-utils"
 import { BookingStatus } from "@prisma/client"
-import { CompleteUser, UserModel, CompleteBookingReference, BookingReferenceModel, CompleteEventType, EventTypeModel, CompleteAttendee, AttendeeModel, CompleteDailyEventReference, DailyEventReferenceModel, CompletePayment, PaymentModel, CompleteDestinationCalendar, DestinationCalendarModel } from "./index"
+import { CompleteUser, UserModel, CompleteBookingReference, BookingReferenceModel, CompleteEventType, EventTypeModel, CompleteAttendee, AttendeeModel, CompleteDailyEventReference, DailyEventReferenceModel, CompletePayment, PaymentModel, CompleteDestinationCalendar, DestinationCalendarModel, CompleteWorkflowReminder, WorkflowReminderModel } from "./index"
 
 // Helper schema for JSON fields
 type Literal = boolean | number | string
@@ -22,10 +22,9 @@ export const _BookingModel = z.object({
   location: z.string().nullish(),
   createdAt: z.date(),
   updatedAt: z.date().nullish(),
-  confirmed: z.boolean(),
-  rejected: z.boolean(),
   status: z.nativeEnum(BookingStatus),
   paid: z.boolean(),
+  destinationCalendarId: z.number().int().nullish(),
   cancellationReason: z.string().nullish(),
   rejectionReason: z.string().nullish(),
   dynamicEventSlugRef: z.string().nullish(),
@@ -33,6 +32,7 @@ export const _BookingModel = z.object({
   rescheduled: z.boolean().nullish(),
   fromReschedule: z.string().nullish(),
   recurringEventId: z.string().nullish(),
+  smsReminderNumber: z.string().nullish(),
 })
 
 export interface CompleteBooking extends z.infer<typeof _BookingModel> {
@@ -43,6 +43,7 @@ export interface CompleteBooking extends z.infer<typeof _BookingModel> {
   dailyRef?: CompleteDailyEventReference | null
   payment: CompletePayment[]
   destinationCalendar?: CompleteDestinationCalendar | null
+  workflowReminders: CompleteWorkflowReminder[]
 }
 
 /**
@@ -58,4 +59,5 @@ export const BookingModel: z.ZodSchema<CompleteBooking> = z.lazy(() => _BookingM
   dailyRef: DailyEventReferenceModel.nullish(),
   payment: PaymentModel.array(),
   destinationCalendar: DestinationCalendarModel.nullish(),
+  workflowReminders: WorkflowReminderModel.array(),
 }))
