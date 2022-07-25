@@ -9,8 +9,64 @@ import sendPayload from "@lib/webhooks/sendPayload";
 
 import { createProtectedRouter } from "@server/createRouter";
 import { getTranslation } from "@server/lib/i18n";
+import { TRPCError } from "@trpc/server";
+
+// Common data for all endpoints under webhook
+const webhookIdAndEventTypeIdSchema = z.object({
+  // Webhook ID
+  id: z.string().optional(),
+  // Event type ID
+  eventTypeId: z.number().optional(),
+});
 
 export const webhookRouter = createProtectedRouter()
+  .middleware(async ({ ctx, rawInput, next }) => {
+    // Endpoints that just read the logged in user's data - like 'list' don't necessary have any input
+    if (!rawInput) {
+      return next();
+    }
+    const webhookIdAndEventTypeId = webhookIdAndEventTypeIdSchema.safeParse(rawInput);
+    if (!webhookIdAndEventTypeId.success) {
+      throw new TRPCError({ code: "PARSE_ERROR" });
+    }
+    const { eventTypeId, id } = webhookIdAndEventTypeId.data;
+
+    // A webhook is either linked to Event Type or to a user.
+    if (eventTypeId) {
+      const team = await ctx.prisma.team.findFirst({
+        where: {
+          eventTypes: {
+            some: {
+              id: eventTypeId,
+            },
+          },
+        },
+        include: {
+          members: true,
+        },
+      });
+
+      // Team should be available and the user should be a member of the team
+      if (!team?.members.some((membership) => membership.userId === ctx.user.id)) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+        });
+      }
+    } else if (id) {
+      const authorizedHook = await ctx.prisma.webhook.findFirst({
+        where: {
+          id: id,
+          userId: ctx.user.id,
+        },
+      });
+      if (!authorizedHook) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+        });
+      }
+    }
+    return next();
+  })
   .query("list", {
     input: z
       .object({
@@ -41,6 +97,7 @@ export const webhookRouter = createProtectedRouter()
       payloadTemplate: z.string().nullable(),
       eventTypeId: z.number().optional(),
       appId: z.string().optional().nullable(),
+      secret: z.string().optional().nullable(),
     }),
     async resolve({ ctx, input }) {
       if (input.eventTypeId) {
@@ -69,6 +126,7 @@ export const webhookRouter = createProtectedRouter()
       payloadTemplate: z.string().nullable(),
       eventTypeId: z.number().optional(),
       appId: z.string().optional().nullable(),
+      secret: z.string().optional().nullable(),
     }),
     async resolve({ ctx, input }) {
       const { id, ...data } = input;
@@ -105,7 +163,6 @@ export const webhookRouter = createProtectedRouter()
     }),
     async resolve({ ctx, input }) {
       const { id } = input;
-
       input.eventTypeId
         ? await ctx.prisma.eventType.update({
             where: {
@@ -151,7 +208,6 @@ export const webhookRouter = createProtectedRouter()
       };
 
       const data = {
-        triggerEvent: "PING",
         type: "Test",
         title: "Test trigger event",
         description: "",
@@ -174,8 +230,8 @@ export const webhookRouter = createProtectedRouter()
       };
 
       try {
-        const webhook = { subscriberUrl: url, payloadTemplate, appId: null };
-        return await sendPayload(type, new Date().toISOString(), webhook, data);
+        const webhook = { subscriberUrl: url, payloadTemplate, appId: null, secret: null };
+        return await sendPayload(null, type, new Date().toISOString(), webhook, data);
       } catch (_err) {
         const error = getErrorFromUnknown(_err);
         return {

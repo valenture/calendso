@@ -71,7 +71,9 @@ export default function Login({
     callbackUrl = `${WEBAPP_URL}/${callbackUrl}`;
   }
 
-  callbackUrl = getSafeRedirectUrl(callbackUrl);
+  const safeCallbackUrl = getSafeRedirectUrl(callbackUrl);
+
+  callbackUrl = safeCallbackUrl || "";
 
   const LoginFooter = (
     <span>
@@ -107,7 +109,7 @@ export default function Login({
           className="space-y-6"
           handleSubmit={async (values) => {
             setErrorMessage(null);
-            telemetry.withJitsu((jitsu) => jitsu.track(telemetryEventTypes.login, collectPageParameters()));
+            telemetry.event(telemetryEventTypes.login, collectPageParameters());
             const res = await signIn<"credentials">("credentials", {
               ...values,
               callbackUrl,
@@ -173,13 +175,11 @@ export default function Login({
                 <Button
                   color="secondary"
                   className="flex w-full justify-center"
-                  data-testid={"google"}
+                  data-testid="google"
                   onClick={async (e) => {
                     e.preventDefault();
                     // track Google logins. Without personal data/payload
-                    telemetry.withJitsu((jitsu) =>
-                      jitsu.track(telemetryEventTypes.googleLogin, collectPageParameters())
-                    );
+                    telemetry.event(telemetryEventTypes.googleLogin, collectPageParameters());
                     await signIn("google");
                   }}>
                   {t("signin_with_google")}

@@ -4,24 +4,22 @@ import { useSession } from "next-auth/react";
 import { Trans } from "next-i18next";
 import { useState } from "react";
 
+import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Alert } from "@calcom/ui/Alert";
 import Button from "@calcom/ui/Button";
+import EmptyScreen from "@calcom/ui/EmptyScreen";
 
-import { useLocale } from "@lib/hooks/useLocale";
 import useMeQuery from "@lib/hooks/useMeQuery";
 import { trpc } from "@lib/trpc";
 
-import EmptyScreen from "@components/EmptyScreen";
-import Loader from "@components/Loader";
 import SettingsShell from "@components/SettingsShell";
-import Shell from "@components/Shell";
+import SkeletonLoaderTeamList from "@components/team/SkeletonloaderTeamList";
 import TeamCreateModal from "@components/team/TeamCreateModal";
 import TeamList from "@components/team/TeamList";
 
-export default function Teams() {
+function Teams() {
   const { t } = useLocale();
   const { status } = useSession();
-  const loading = status === "loading";
   const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -33,15 +31,13 @@ export default function Teams() {
     },
   });
 
-  if (loading) return <Loader />;
-
   const teams = data?.filter((m) => m.accepted) || [];
   const invites = data?.filter((m) => !m.accepted) || [];
   const isFreePlan = me.data?.plan === "FREE";
 
   return (
-    <Shell heading={t("teams")} subtitle={t("create_manage_teams_collaborative")}>
-      <SettingsShell>
+    <SettingsShell heading={t("teams")} subtitle={t("create_manage_teams_collaborative")}>
+      <>
         {!!errorMessage && <Alert severity="error" title={errorMessage} />}
         {isFreePlan && (
           <Alert
@@ -76,18 +72,23 @@ export default function Teams() {
         {invites.length > 0 && (
           <div className="mb-4">
             <h1 className="mb-2 text-lg font-medium">{t("open_invitations")}</h1>
-            <TeamList teams={invites}></TeamList>
+            <TeamList teams={invites} />
           </div>
         )}
-        {!isLoading && !teams.length && (
+        {isLoading && <SkeletonLoaderTeamList />}
+        {!teams.length && !isLoading && (
           <EmptyScreen
             Icon={UserGroupIcon}
             headline={t("no_teams")}
             description={t("no_teams_description")}
           />
         )}
-        {teams.length > 0 && <TeamList teams={teams}></TeamList>}
-      </SettingsShell>
-    </Shell>
+        {teams.length > 0 && <TeamList teams={teams} />}
+      </>
+    </SettingsShell>
   );
 }
+
+Teams.requiresLicense = false;
+
+export default Teams;

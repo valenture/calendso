@@ -11,8 +11,6 @@ import { Button, Loader, Tooltip } from "@calcom/ui";
 /** TODO: Maybe extract this into a package to prevent circular dependencies */
 import { trpc } from "@calcom/web/lib/trpc";
 
-import Icon from "../../components/icon";
-
 export interface IZapierSetupProps {
   inviteLink: string;
 }
@@ -23,12 +21,15 @@ export default function ZapierSetup(props: IZapierSetupProps) {
   const [newApiKey, setNewApiKey] = useState("");
   const { t } = useLocale();
   const utils = trpc.useContext();
-  const integrations = trpc.useQuery(["viewer.integrations"]);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const integrations = trpc.useQuery(["viewer.integrations", { variant: "other" }]);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const oldApiKey = trpc.useQuery(["viewer.apiKeys.findKeyOfType", { appId: ZAPIER }]);
 
   const deleteApiKey = trpc.useMutation("viewer.apiKeys.delete");
-  const zapierCredentials: { credentialIds: number[] } | undefined = integrations.data?.other?.items.find(
+  const zapierCredentials: { credentialIds: number[] } | undefined = integrations.data?.items.find(
     (item: { type: string }) => item.type === "zapier_other"
   );
   const [credentialId] = zapierCredentials?.credentialIds || [false];
@@ -37,6 +38,7 @@ export default function ZapierSetup(props: IZapierSetupProps) {
 
   async function createApiKey() {
     const event = { note: "Zapier", expiresAt: null, appId: ZAPIER };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const apiKey = await utils.client.mutation("viewer.apiKeys.create", event);
     if (oldApiKey.data) {
@@ -61,7 +63,7 @@ export default function ZapierSetup(props: IZapierSetupProps) {
         <div className="m-auto rounded bg-white p-10">
           <div className="flex flex-row">
             <div className="mr-5">
-              <Icon />
+              <img className="h-11" src="/api/app-store/zapier/icon.svg" alt="Zapier Logo" />
             </div>
             <div className="ml-5">
               <div className="text-gray-600">{t("setting_up_zapier")}</div>
@@ -77,7 +79,7 @@ export default function ZapierSetup(props: IZapierSetupProps) {
                   <div className="mt-1 text-xl">{t("your_unique_api_key")}</div>
                   <div className="my-2 mt-3 flex">
                     <div className="mr-1 w-full rounded bg-gray-100 p-3 pr-5">{newApiKey}</div>
-                    <Tooltip content="copy to clipboard">
+                    <Tooltip side="top" content="copy to clipboard">
                       <Button
                         onClick={() => {
                           navigator.clipboard.writeText(newApiKey);
@@ -113,7 +115,7 @@ export default function ZapierSetup(props: IZapierSetupProps) {
                   <li>You&apos;re set!</li>
                 </Trans>
               </ol>
-              <Link href={"/apps/installed"} passHref={true}>
+              <Link href="/apps/installed" passHref={true}>
                 <Button color="secondary">{t("done")}</Button>
               </Link>
             </div>
@@ -123,7 +125,7 @@ export default function ZapierSetup(props: IZapierSetupProps) {
         <div className="mt-5 ml-5">
           <div>{t("install_zapier_app")}</div>
           <div className="mt-3">
-            <Link href={"/apps/zapier"} passHref={true}>
+            <Link href="/apps/zapier" passHref={true}>
               <Button>{t("go_to_app_store")}</Button>
             </Link>
           </div>

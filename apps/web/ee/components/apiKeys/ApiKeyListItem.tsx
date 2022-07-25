@@ -1,8 +1,7 @@
 import { PencilAltIcon, TrashIcon } from "@heroicons/react/outline";
 import { ExclamationIcon } from "@heroicons/react/solid";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 
+import dayjs from "@calcom/dayjs";
 import classNames from "@calcom/lib/classNames";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import Button from "@calcom/ui/Button";
@@ -14,8 +13,6 @@ import { inferQueryOutput, trpc } from "@lib/trpc";
 import { ListItem } from "@components/List";
 import ConfirmationDialogContent from "@components/dialog/ConfirmationDialogContent";
 import Badge from "@components/ui/Badge";
-
-dayjs.extend(relativeTime);
 
 export type TApiKeys = inferQueryOutput<"viewer.apiKeys.list">[number];
 
@@ -30,7 +27,7 @@ export default function ApiKeyListItem(props: { apiKey: TApiKeys; onEditApiKey: 
     },
   });
   return (
-    <ListItem className="-mt-px flex w-full p-4">
+    <ListItem className="flex w-full p-4">
       <div className="flex w-full justify-between">
         <div className="flex max-w-full flex-col truncate">
           <div className="flex space-x-2">
@@ -64,7 +61,7 @@ export default function ApiKeyListItem(props: { apiKey: TApiKeys; onEditApiKey: 
           </div>
         </div>
         <div className="flex">
-          <Tooltip content={t("edit_api_key")}>
+          <Tooltip side="top" content={t("edit_api_key")}>
             <Button
               onClick={() => props.onEditApiKey()}
               color="minimal"
@@ -74,7 +71,7 @@ export default function ApiKeyListItem(props: { apiKey: TApiKeys; onEditApiKey: 
             />
           </Tooltip>
           <Dialog>
-            <Tooltip content={t("delete_api_key")}>
+            <Tooltip side="top" content={t("delete_api_key")}>
               <DialogTrigger asChild>
                 <Button
                   onClick={(e) => {

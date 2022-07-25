@@ -6,19 +6,18 @@ import { WipeMyCalActionButton } from "@calcom/app-store/wipemycalother/componen
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Alert } from "@calcom/ui/Alert";
 import Button from "@calcom/ui/Button";
+import EmptyScreen from "@calcom/ui/EmptyScreen";
 
 import { useInViewObserver } from "@lib/hooks/useInViewObserver";
 import { inferQueryInput, inferQueryOutput, trpc } from "@lib/trpc";
 
 import BookingsShell from "@components/BookingsShell";
-import EmptyScreen from "@components/EmptyScreen";
 import Shell from "@components/Shell";
 import BookingListItem from "@components/booking/BookingListItem";
 import SkeletonLoader from "@components/booking/SkeletonLoader";
 
 type BookingListingStatus = inferQueryInput<"viewer.bookings">["status"];
 type BookingOutput = inferQueryOutput<"viewer.bookings">["bookings"][0];
-type BookingPage = inferQueryOutput<"viewer.bookings">;
 
 export default function Bookings() {
   const router = useRouter();
@@ -47,18 +46,34 @@ export default function Bookings() {
 
   const isEmpty = !query.data?.pages[0]?.bookings.length;
 
-  // Get the recurrentCount value from the grouped recurring bookings
-  // created with the same recurringEventId
-  const defineRecurrentCount = (booking: BookingOutput, page: BookingPage) => {
-    let recurringCount = 0;
+  // Get all recurring events of the series with the same recurringEventId
+  const defineRecurrentBookings = (
+    booking: BookingOutput,
+    groupedBookings: Record<string, BookingOutput[]>
+  ) => {
+    let recurringBookings = undefined;
     if (booking.recurringEventId !== null) {
-      recurringCount = page.groupedRecurringBookings.filter(
-        (group) => group.recurringEventId === booking.recurringEventId
-      )[0]._count; // If found, only one object exists, just assing the needed _count value
+      recurringBookings = groupedBookings[booking.recurringEventId];
     }
-    return { recurringCount };
+    return { recurringBookings };
   };
-
+  const shownBookings: Record<string, BookingOutput[]> = {};
+  const filterBookings = (booking: BookingOutput) => {
+    if (status === "recurring" || status === "cancelled") {
+      if (!booking.recurringEventId) {
+        return true;
+      }
+      if (
+        shownBookings[booking.recurringEventId] !== undefined &&
+        shownBookings[booking.recurringEventId].length > 0
+      ) {
+        shownBookings[booking.recurringEventId].push(booking);
+        return false;
+      }
+      shownBookings[booking.recurringEventId] = [booking];
+    }
+    return true;
+  };
   return (
     <Shell heading={t("bookings")} subtitle={t("bookings_description")} customLoader={<SkeletonLoader />}>
       <WipeMyCalActionButton trpc={trpc} bookingStatus={status} bookingsEmpty={isEmpty} />
@@ -77,11 +92,11 @@ export default function Bookings() {
                       <tbody className="divide-y divide-gray-200 bg-white" data-testid="bookings">
                         {query.data.pages.map((page, index) => (
                           <Fragment key={index}>
-                            {page.bookings.map((booking) => (
+                            {page.bookings.filter(filterBookings).map((booking: BookingOutput) => (
                               <BookingListItem
                                 key={booking.id}
                                 listingStatus={status}
-                                {...defineRecurrentCount(booking, page)}
+                                {...defineRecurrentBookings(booking, shownBookings)}
                                 {...booking}
                               />
                             ))}
@@ -104,9 +119,9 @@ export default function Bookings() {
               {query.status === "success" && isEmpty && (
                 <EmptyScreen
                   Icon={CalendarIcon}
-                  headline={t("no_status_bookings_yet", { status: t(status) })}
+                  headline={t("no_status_bookings_yet", { status: t(status).toLowerCase() })}
                   description={t("no_status_bookings_yet_description", {
-                    status: t(status),
+                    status: t(status).toLowerCase(),
                     description: descriptionByStatus[status],
                   })}
                 />

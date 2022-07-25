@@ -4,6 +4,8 @@ import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/router";
 import { FC, Fragment, MouseEventHandler } from "react";
 
+import { useLocale } from "@calcom/lib/hooks/useLocale";
+
 import classNames from "@lib/classNames";
 import { SVGComponent } from "@lib/types/SVGComponent";
 
@@ -16,16 +18,18 @@ export interface NavTabProps {
     tabName?: string;
     icon?: SVGComponent;
     adminRequired?: boolean;
+    className?: string;
   }[];
   linkProps?: Omit<LinkProps, "href">;
 }
 
 const NavTabs: FC<NavTabProps> = ({ tabs, linkProps, ...props }) => {
   const router = useRouter();
+  const { t } = useLocale();
   return (
     <>
       <nav
-        className="-mb-px flex space-x-5 rtl:space-x-reverse sm:rtl:space-x-reverse"
+        className="no-scrollbar -mb-px flex space-x-5 overflow-x-scroll rtl:space-x-reverse sm:rtl:space-x-reverse"
         aria-label="Tabs"
         {...props}>
         {tabs.map((tab) => {
@@ -55,7 +59,7 @@ const NavTabs: FC<NavTabProps> = ({ tabs, linkProps, ...props }) => {
             : noop;
 
           const Component = tab.adminRequired ? AdminRequired : Fragment;
-
+          const className = tab.className || "";
           return (
             <Component key={tab.name}>
               <Link key={tab.name} href={href} {...linkProps}>
@@ -65,7 +69,8 @@ const NavTabs: FC<NavTabProps> = ({ tabs, linkProps, ...props }) => {
                     isCurrent
                       ? "border-neutral-900 text-neutral-900"
                       : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
-                    "group inline-flex items-center border-b-2 py-4 px-1 text-sm font-medium"
+                    "group inline-flex items-center border-b-2 py-4 px-1 text-sm font-medium",
+                    className
                   )}
                   aria-current={isCurrent ? "page" : undefined}>
                   {tab.icon && (
@@ -77,7 +82,7 @@ const NavTabs: FC<NavTabProps> = ({ tabs, linkProps, ...props }) => {
                       aria-hidden="true"
                     />
                   )}
-                  <span>{tab.name}</span>
+                  <span>{t(tab.name)}</span>
                 </a>
               </Link>
             </Component>

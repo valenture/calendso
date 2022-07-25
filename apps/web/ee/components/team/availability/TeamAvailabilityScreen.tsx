@@ -1,9 +1,9 @@
-import dayjs from "dayjs";
 import React, { useState, useEffect, CSSProperties } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 
-import { WEBSITE_URL } from "@calcom/lib/constants";
+import dayjs from "@calcom/dayjs";
+import { CAL_URL } from "@calcom/lib/constants";
 
 import { inferQueryOutput, trpc } from "@lib/trpc";
 
@@ -46,7 +46,7 @@ export default function TeamAvailabilityScreen(props: Props) {
           HeaderComponent={
             <div className="mb-6 flex items-center">
               <Avatar
-                imageSrc={WEBSITE_URL + "/" + member.username + "/avatar.png"}
+                imageSrc={CAL_URL + "/" + member.username + "/avatar.png"}
                 alt={member?.name || ""}
                 className="min-w-10 min-h-10 mt-1 h-10 w-10 rounded-full"
               />
@@ -81,7 +81,7 @@ export default function TeamAvailabilityScreen(props: Props) {
             value={selectedTimeZone}
             onChange={(timezone) => setSelectedTimeZone(timezone.value)}
             classNamePrefix="react-select"
-            className="react-select-container w-full rounded-sm border border-gray-300 shadow-sm sm:text-sm"
+            className="react-select-container w-full rounded-sm border border-gray-300 sm:text-sm"
           />
         </div>
         <div className="hidden sm:block">

@@ -7,7 +7,6 @@ import DynamicHelpscoutProvider from "@ee/lib/helpscout/providerDynamic";
 import DynamicIntercomProvider from "@ee/lib/intercom/providerDynamic";
 
 import usePublicPage from "@lib/hooks/usePublicPage";
-import { createTelemetryClient, TelemetryProvider } from "@lib/telemetry";
 
 import { trpc } from "./trpc";
 
@@ -16,7 +15,8 @@ const I18nextAdapter = appWithTranslation<NextJsAppProps & { children: React.Rea
 ));
 
 // Workaround for https://github.com/vercel/next.js/issues/8592
-export type AppProps = NextAppProps & {
+export type AppProps = Omit<NextAppProps, "Component"> & {
+  Component: NextAppProps["Component"] & { requiresLicense?: boolean };
   /** Will be defined only is there was an error */
   err?: Error;
 };
@@ -26,7 +26,11 @@ type AppPropsWithChildren = AppProps & {
 };
 
 const CustomI18nextProvider = (props: AppPropsWithChildren) => {
-  const { i18n, locale } = trpc.useQuery(["viewer.i18n"]).data ?? {
+  /**
+   * i18n should never be clubbed with other queries, so that it's caching can be managed independently.
+   * We intend to not cache i18n query
+   **/
+  const { i18n, locale } = trpc.useQuery(["viewer.public.i18n"], { context: { skipBatch: true } }).data ?? {
     locale: "en",
   };
 
@@ -42,7 +46,7 @@ const CustomI18nextProvider = (props: AppPropsWithChildren) => {
 };
 
 const AppProviders = (props: AppPropsWithChildren) => {
-  const session = trpc.useQuery(["viewer.session"]).data;
+  const session = trpc.useQuery(["viewer.public.session"]).data;
   // No need to have intercom on public pages - Good for Page Performance
   const isPublicPage = usePublicPage();
   const RemainingProviders = (
@@ -50,17 +54,15 @@ const AppProviders = (props: AppPropsWithChildren) => {
       <CustomI18nextProvider {...props}>{props.children}</CustomI18nextProvider>
     </SessionProvider>
   );
-  const telemetryClient = useMemo(createTelemetryClient, []);
+
+  if (isPublicPage) {
+    return RemainingProviders;
+  }
+
   return (
-    <TelemetryProvider value={telemetryClient}>
-      {isPublicPage ? (
-        RemainingProviders
-      ) : (
-        <DynamicHelpscoutProvider>
-          <DynamicIntercomProvider>{RemainingProviders}</DynamicIntercomProvider>
-        </DynamicHelpscoutProvider>
-      )}
-    </TelemetryProvider>
+    <DynamicHelpscoutProvider>
+      <DynamicIntercomProvider>{RemainingProviders}</DynamicIntercomProvider>
+    </DynamicHelpscoutProvider>
   );
 };
 
