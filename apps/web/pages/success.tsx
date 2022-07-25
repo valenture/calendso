@@ -204,34 +204,34 @@ export default function Success(props: SuccessProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventType, needsConfirmation]);
 
-  function eventLink(): string {
-    const optional: { location?: string } = {};
-    if (location) {
-      optional["location"] = location;
-    }
+  // function eventLink(): string {
+  //   const optional: { location?: string } = {};
+  //   if (location) {
+  //     optional["location"] = location;
+  //   }
 
-    const event = createEvent({
-      start: [
-        date.toDate().getUTCFullYear(),
-        (date.toDate().getUTCMonth() as number) + 1,
-        date.toDate().getUTCDate(),
-        date.toDate().getUTCHours(),
-        date.toDate().getUTCMinutes(),
-      ],
-      startInputType: "utc",
-      title: eventName,
-      description: props.eventType.description ? props.eventType.description : undefined,
-      /** formatted to required type of description ^ */
-      duration: { minutes: props.eventType.length },
-      ...optional,
-    });
+  //   const event = createEvent({
+  //     start: [
+  //       date.toDate().getUTCFullYear(),
+  //       (date.toDate().getUTCMonth() as number) + 1,
+  //       date.toDate().getUTCDate(),
+  //       date.toDate().getUTCHours(),
+  //       date.toDate().getUTCMinutes(),
+  //     ],
+  //     startInputType: "utc",
+  //     title: eventName,
+  //     description: props.eventType.description ? props.eventType.description : undefined,
+  //     /** formatted to required type of description ^ */
+  //     duration: { minutes: props.eventType.length },
+  //     ...optional,
+  //   });
 
-    if (event.error) {
-      throw event.error;
-    }
+  //   if (event.error) {
+  //     throw event.error;
+  //   }
 
-    return encodeURIComponent(event.value ? event.value : false);
-  }
+  //   return encodeURIComponent(event.value ? event.value : false);
+  // }
 
   function getTitle(): string {
     const titleSuffix = props.recurringBookings ? "_recurring" : "";
