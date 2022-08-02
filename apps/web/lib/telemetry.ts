@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { EventHandler, EventSinkOpts } from "next-collect";
 import { useCollector } from "next-collect/client";
 // it's ok to do this since we're importing only types which are harmless
-// eslint-disable-next-line  @next/next/no-server-import-in-page
+
 import type { NextRequest, NextResponse } from "next/server";
 
 import { CONSOLE_URL } from "@calcom/lib/constants";

@@ -106,7 +106,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         role,
       },
     });
-  } catch (err: any) {
+  } catch (err) {
     if (err.code === "P2002") {
       // unique constraint violation
       return res.status(409).json({

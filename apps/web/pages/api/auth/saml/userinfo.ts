@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const profile = await oauthController.userInfo(token);
 
     res.json(profile);
-  } catch (err: any) {
+  } catch (err) {
     console.error("userinfo error:", err);
     const { message, statusCode = 500 } = err;
 

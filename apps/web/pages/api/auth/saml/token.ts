@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const result = await oauthController.token(req.body);
 
     res.json(result);
-  } catch (err: any) {
+  } catch (err) {
     console.error("token error:", err);
     const { message, statusCode = 500 } = err;
 
