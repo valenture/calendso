@@ -9,8 +9,7 @@
       "@server/*": ["server/*"],
       "@ee/*": ["ee/*"],
       "@prisma/client/*": ["@calcom/prisma/client/*"]
-    },
-    "noImplicitAny": false
+    }
   },
   "include": [
     /* Find a way to not require this - App files don't belong here. */
