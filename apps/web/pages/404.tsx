@@ -204,7 +204,7 @@ export default function Custom404() {
                   </span>
                 )}
               </div>
-              <div className="mt-12">
+              <div className="mt-12 hidden">
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
                   {t("popular_pages")}
                 </h2>

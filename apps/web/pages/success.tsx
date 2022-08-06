@@ -255,7 +255,7 @@ export default function Success(props: SuccessProps) {
   return (
     <div className={isEmbed ? "" : "h-screen bg-neutral-100 dark:bg-neutral-900"} data-testid="success-page">
       {userIsOwner && !isEmbed && (
-        <div className="mt-2 ml-4 -mb-4">
+        <div className="mt-2 ml-4 -mb-4 hidden">
           <Link href={eventType.recurringEvent?.count ? "/bookings/recurring" : "/bookings/upcoming"}>
             <a className="mt-2 inline-flex px-1 py-2 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-800">
               <Icon.FiChevronLeft className="h-5 w-5" /> {t("back_to_bookings")}
@@ -336,8 +336,8 @@ export default function Success(props: SuccessProps) {
                       </div>
                       {(bookingInfo?.user || bookingInfo?.attendees) && (
                         <>
-                          <div className="font-medium">{t("who")}</div>
-                          <div className="col-span-2 mb-6">
+                          <div className="hidden font-medium">{t("who")}</div>
+                          <div className="col-span-2 mb-6 hidden">
                             {bookingInfo?.user && (
                               <div className="mb-3">
                                 <p>{bookingInfo.user.name}</p>
@@ -371,8 +371,8 @@ export default function Success(props: SuccessProps) {
                       )}
                       {bookingInfo?.description && (
                         <>
-                          <div className="mt-9 font-medium">{t("additional_notes")}</div>
-                          <div className="col-span-2 mb-2 mt-9">
+                          <div className="mt-9 hidden font-medium">{t("additional_notes")}</div>
+                          <div className="col-span-2 mb-2 mt-9 hidden">
                             <p>{bookingInfo.description}</p>
                           </div>
                         </>
@@ -403,7 +403,7 @@ export default function Success(props: SuccessProps) {
                 {!needsConfirmation &&
                   !isCancelled &&
                   (!isCancellationMode ? (
-                    <div className="border-bookinglightest text-bookingdark mt-2 grid-cols-3 border-b py-4 text-left dark:border-gray-900 sm:grid">
+                    <div className="border-bookinglightest text-bookingdark mt-2 hidden grid-cols-3 border-b py-4 text-left dark:border-gray-900 sm:grid">
                       <span className="font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
                         {t("need_to_make_a_change")}
                       </span>
@@ -436,8 +436,8 @@ export default function Success(props: SuccessProps) {
                     />
                   ))}
                 {userIsOwner && !needsConfirmation && !isCancellationMode && !isCancelled && (
-                  <div className="border-bookinglightest mt-9 flex flex-col border-b pt-2 pb-4 text-center dark:border-gray-900 sm:mt-0 sm:flex-row sm:pt-4">
-                    <span className="mb-4 flex self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50 sm:mb-0">
+                  <div className="border-bookinglightest mt-9 hidden flex-col border-b pt-2 pb-4 text-center dark:border-gray-900 sm:mt-0 sm:flex-row sm:pt-4">
+                    <span className="hidden self-center font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50 sm:mb-0">
                       {t("add_to_calendar")}
                     </span>
                     <div className="flex flex-grow justify-center text-center sm:-ml-16">
@@ -539,7 +539,7 @@ export default function Success(props: SuccessProps) {
                   </div>
                 )}
                 {session === null && !(userIsOwner || props.hideBranding) && (
-                  <div className="border-bookinglightest text-booking-lighter pt-4 text-center text-xs dark:border-gray-900 dark:text-white">
+                  <div className="border-bookinglightest text-booking-lighter hidden pt-4 text-center text-xs dark:border-gray-900 dark:text-white">
                     <a href="https://cal.com/signup">{t("create_booking_link_with_calcom")}</a>
 
                     <form
