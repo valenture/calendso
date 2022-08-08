@@ -251,7 +251,6 @@ model Attendee {
   locale    String?  @default("en")
   booking   Booking? @relation(fields: [bookingId], references: [id])
   bookingId Int?
-  question  String?
 }
 
 enum BookingStatus {
