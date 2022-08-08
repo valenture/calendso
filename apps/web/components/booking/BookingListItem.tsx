@@ -368,14 +368,19 @@ function BookingListItem(booking: BookingItemProps) {
               </div>
             )}
 
-            {booking.attendees.length !== 0 && (
-              <a
-                className="text-sm text-gray-900 hover:text-blue-500"
-                href={"mailto:" + booking.attendees[0].email}
-                onClick={(e) => e.stopPropagation()}>
-                {booking.attendees[0].email}
-              </a>
-            )}
+            <div className="text-sm">
+              {booking.attendees.length !== 0 && (
+                // show each attendee
+                <div>
+                  {booking.attendees.map((attendee, index) => (
+                    <div key={index} className="flex flex-row">
+                      <div className="mr-1">{attendee.name}</div>
+                      <div className="ml-1">{attendee.question}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             {isCancelled && booking.rescheduled && (
               <div className="mt-2 inline-block text-left text-sm md:hidden">
                 <RequestSentMessage />
