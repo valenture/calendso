@@ -422,6 +422,7 @@ async function handler(req: NextApiRequest) {
             name: invitee[0].name,
             timeZone: invitee[0].timeZone,
             locale: invitee[0].language.locale,
+            question: reqBody.notes,
           },
         },
       },
