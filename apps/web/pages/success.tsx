@@ -403,13 +403,13 @@ export default function Success(props: SuccessProps) {
                 {!needsConfirmation &&
                   !isCancelled &&
                   (!isCancellationMode ? (
-                    <div className="border-bookinglightest text-bookingdark mt-2 hidden grid-cols-3 border-b py-4 text-left dark:border-gray-900 sm:grid">
+                    <div className="hidden">
                       <span className="font-medium text-gray-700 ltr:mr-2 rtl:ml-2 dark:text-gray-50">
                         {t("need_to_make_a_change")}
                       </span>
                       <div
                         className={classNames(
-                          "items-center self-center ltr:mr-2 rtl:ml-2 dark:text-gray-50  sm:justify-center",
+                          "items-center self-center ltr:mr-2 rtl:ml-2  dark:text-gray-50 sm:justify-center",
                           !props.recurringBookings ? "flex sm:ml-7" : ""
                         )}>
                         <button className="underline" onClick={() => setIsCancellationMode(true)}>
