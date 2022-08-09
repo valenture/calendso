@@ -32,12 +32,9 @@ export const BaseScheduledEmail = (
     return dayjs(props.calEvent.endTime).tz(timeZone).format(format);
   }
 
-  function hideMakeChange(
-    bookingInfo: { attendees: string | unknown[]; user: { email: string } },
-    attendeeEmail: string
-  ) {
-    const isGroupBooking = (bookingInfo && bookingInfo?.attendees.length > 1) || false;
-    const isOwner = (bookingInfo && bookingInfo?.user && bookingInfo?.user.email == attendeeEmail) || false;
+  function hideMakeChange(attendees: Person[], organizerEmail: string, attendeeEmail: string) {
+    const isGroupBooking = attendees.length > 1;
+    const isOwner = organizerEmail == attendeeEmail;
     let hideMakeChange = false;
 
     if (isOwner && isGroupBooking) {
@@ -76,9 +73,12 @@ export const BaseScheduledEmail = (
           : "your_event_has_been_scheduled"
       )}
       callToAction={
-        props.callToAction === null
-          ? null
-          : props.callToAction || <ManageLink attendee={props.attendee} calEvent={props.calEvent} />
+        props.callToAction === null ? null : props.callToAction ||
+          hideMakeChange(props.calEvent.attendees, props.calEvent.organizer.email, props.attendee.email) ? (
+          <ManageLink attendee={props.attendee} calEvent={props.calEvent} />
+        ) : (
+          <></>
+        )
       }
       subtitle={props.subtitle || <>{t("emailed_you_and_any_other_attendees")}</>}>
       <Info label={t("cancellation_reason")} description={props.calEvent.cancellationReason} withSpacer />
