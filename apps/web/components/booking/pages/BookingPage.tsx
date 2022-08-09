@@ -155,6 +155,7 @@ const BookingPage = ({
           eventName: profile.eventName || "",
           bookingId: id,
           isSuccessBookingPage: true,
+          attendeeEmail: bookingForm.getValues("email"),
         },
       });
     },
