@@ -1,6 +1,7 @@
 import type { TFunction } from "next-i18next";
 
 import dayjs from "@calcom/dayjs";
+import { BookingInfo } from "@calcom/features/ee/workflows/lib/reminders/smsReminderManager";
 import type { CalendarEvent, Person } from "@calcom/types/Calendar";
 
 import {
@@ -29,6 +30,30 @@ export const BaseScheduledEmail = (
 
   function getRecipientEnd(format: string) {
     return dayjs(props.calEvent.endTime).tz(timeZone).format(format);
+  }
+
+  function hideMakeChange(
+    bookingInfo: { attendees: string | unknown[]; user: { email: string } },
+    attendeeEmail: string
+  ) {
+    const isGroupBooking = (bookingInfo && bookingInfo?.attendees.length > 1) || false;
+    const isOwner = (bookingInfo && bookingInfo?.user && bookingInfo?.user.email == attendeeEmail) || false;
+    let hideMakeChange = false;
+
+    if (isOwner && isGroupBooking) {
+      hideMakeChange = false;
+    } else if (!isOwner && isGroupBooking) {
+      // if is group booking and user is not owner
+      hideMakeChange = true;
+    } else if (isOwner && !isGroupBooking) {
+      // if not group booking and user is owner
+      hideMakeChange = false;
+    } else if (!isOwner && !isGroupBooking) {
+      // if not owner and not group booking
+      hideMakeChange = false;
+    }
+
+    return hideMakeChange;
   }
 
   const subject = t(props.subject || "confirmed_event_type_subject", {
@@ -60,7 +85,7 @@ export const BaseScheduledEmail = (
       <Info label={t("rejection_reason")} description={props.calEvent.rejectionReason} withSpacer />
       <Info label={t("what")} description={props.calEvent.type} withSpacer />
       <WhenInfo calEvent={props.calEvent} t={t} timeZone={timeZone} />
-      <WhoInfo calEvent={props.calEvent} t={t} />
+      <WhoInfo calEvent={props.calEvent} t={t} recieverEmail={props.attendee.email} />
       <LocationInfo calEvent={props.calEvent} t={t} />
       <Info label={t("description")} description={props.calEvent.description} withSpacer />
       <CustomInputs calEvent={props.calEvent} />
