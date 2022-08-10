@@ -139,7 +139,16 @@ type SuccessProps = inferSSRProps<typeof getServerSideProps>;
 export default function Success(props: SuccessProps) {
   const { t } = useLocale();
   const router = useRouter();
-  const { location: _location, name, reschedule, listingStatus, status, isSuccessBookingPage } = router.query;
+  const {
+    location: _location,
+    name,
+    attendeeEmail,
+    reschedule,
+    listingStatus,
+    status,
+    isSuccessBookingPage,
+    isGroupBooking,
+  } = router.query;
   const location = Array.isArray(_location) ? _location[0] : _location;
   const [is24h, setIs24h] = useState(isBrowserLocale24h());
   const { data: session } = useSession();
@@ -173,6 +182,23 @@ export default function Success(props: SuccessProps) {
   const eventName = getEventName(eventNameObject, true);
   const needsConfirmation = eventType.requiresConfirmation && reschedule != "true";
   const isCancelled = status === "CANCELLED" || status === "REJECTED";
+  const isOwner = (bookingInfo && bookingInfo?.user && bookingInfo?.user.email == attendeeEmail) || false;
+  let hideMakeChange = false;
+
+  // if is group booking and user is owner
+  if (isOwner && isGroupBooking) {
+    hideMakeChange = false;
+  } else if (!isOwner && isGroupBooking) {
+    // if is group booking and user is not owner
+    hideMakeChange = true;
+  } else if (isOwner && !isGroupBooking) {
+    // if not group booking and user is owner
+    hideMakeChange = false;
+  } else if (!isOwner && !isGroupBooking) {
+    // if not owner and not group booking
+    hideMakeChange = false;
+  }
+
   const telemetry = useTelemetry();
   useEffect(() => {
     if (top !== window) {
@@ -401,6 +427,7 @@ export default function Success(props: SuccessProps) {
                   </div>
                 </div>
                 {!needsConfirmation &&
+                  !hideMakeChange &&
                   !isCancelled &&
                   (!isCancellationMode ? (
                     <div className="border-bookinglightest text-bookingdark mt-2 hidden grid-cols-3 border-b py-4 text-left dark:border-gray-900 sm:grid">
@@ -409,7 +436,7 @@ export default function Success(props: SuccessProps) {
                       </span>
                       <div
                         className={classNames(
-                          "items-center self-center ltr:mr-2 rtl:ml-2 dark:text-gray-50  sm:justify-center",
+                          "items-center self-center ltr:mr-2 rtl:ml-2  dark:text-gray-50 sm:justify-center",
                           !props.recurringBookings ? "flex sm:ml-7" : ""
                         )}>
                         <button className="underline" onClick={() => setIsCancellationMode(true)}>

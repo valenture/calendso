@@ -155,6 +155,8 @@ const BookingPage = ({
           eventName: profile.eventName || "",
           bookingId: id,
           isSuccessBookingPage: true,
+          attendeeEmail: bookingForm.getValues("email"),
+          isGroupBooking: eventType.seatsPerTimeSlot ? true : false,
         },
       });
     },
