@@ -536,6 +536,7 @@ async function handler(req: NextApiRequest) {
               email: attendee.email,
               timeZone: attendee.timeZone,
               locale: attendee.language.locale,
+              question: reqBody.notes,
             };
             return retObj;
           }),

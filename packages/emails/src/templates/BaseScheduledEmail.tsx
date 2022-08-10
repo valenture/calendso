@@ -75,7 +75,6 @@ export const BaseScheduledEmail = (
       <WhoInfo calEvent={props.calEvent} t={t} recieverEmail={props.attendee.email} />
       <LocationInfo calEvent={props.calEvent} t={t} />
       <Info label={t("description")} description={props.calEvent.description} withSpacer />
-      <Info label={t("additional_notes")} description={props.calEvent.additionalNotes} withSpacer />
       <CustomInputs calEvent={props.calEvent} />
     </BaseEmailHtml>
   );
