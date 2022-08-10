@@ -333,8 +333,8 @@ function BookingListItem(booking: BookingItemProps) {
             </div>
           </div>
         </td>
-        <td className={"flex-1 ltr:pl-4 rtl:pr-4" + (isRejected ? " line-through" : "")} onClick={onClick}>
-          <div className="cursor-pointer py-4">
+        <td className={"flex-1 ltr:pl-4 rtl:pr-4" + (isRejected ? " line-through" : "")}>
+          <div className="py-4">
             <div className="sm:hidden">
               {isPending && <Tag className="mb-2 ltr:mr-2 rtl:ml-2">{t("unconfirmed")}</Tag>}
               {!!booking?.eventType?.price && !booking.paid && (
@@ -360,22 +360,16 @@ function BookingListItem(booking: BookingItemProps) {
               )}
               {isPending && <Tag className="hidden ltr:ml-2 rtl:mr-2 sm:inline-flex">{t("unconfirmed")}</Tag>}
             </div>
-            {booking.description && (
-              <div
-                className="max-w-52 md:max-w-96 truncate text-sm text-gray-500"
-                title={booking.description}>
-                &quot;{booking.description}&quot;
-              </div>
-            )}
-
             <div className="text-sm">
               {booking.attendees.length !== 0 && (
                 // show each attendee
-                <div>
+                <div className="flex flex-col">
                   {booking.attendees.map((attendee, index) => (
-                    <div key={index} className="flex flex-row">
-                      <div className="mr-1">{attendee.name}</div>
-                      <div className="ml-1">{attendee.question}</div>
+                    <div key={index} className="mb-1">
+                      <div>
+                        {attendee.name} ({attendee.email})
+                      </div>
+                      <div>{attendee.question}</div>
                     </div>
                   ))}
                 </div>
