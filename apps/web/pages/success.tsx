@@ -186,15 +186,15 @@ export default function Success(props: SuccessProps) {
   let hideMakeChange = false;
 
   // if is group booking and user is owner
-  if (isOwner && isGroupBooking) {
+  if (isOwner && isGroupBooking == "true") {
     hideMakeChange = false;
-  } else if (!isOwner && isGroupBooking) {
+  } else if (!isOwner && isGroupBooking == "true") {
     // if is group booking and user is not owner
     hideMakeChange = true;
-  } else if (isOwner && !isGroupBooking) {
+  } else if (isOwner && isGroupBooking == "false") {
     // if not group booking and user is owner
     hideMakeChange = false;
-  } else if (!isOwner && !isGroupBooking) {
+  } else if (!isOwner && isGroupBooking == "false") {
     // if not owner and not group booking
     hideMakeChange = false;
   }
