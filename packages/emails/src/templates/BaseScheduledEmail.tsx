@@ -32,25 +32,9 @@ export const BaseScheduledEmail = (
     return dayjs(props.calEvent.endTime).tz(timeZone).format(format);
   }
 
-  function hideMakeChange(attendees: Person[], organizerEmail: string, attendeeEmail: string) {
-    const isGroupBooking = attendees.length > 1;
+  function hideMakeChange(organizerEmail: string, attendeeEmail: string) {
     const isOwner = organizerEmail == attendeeEmail;
-    let hideMakeChange = false;
-
-    if (isOwner && isGroupBooking) {
-      hideMakeChange = false;
-    } else if (!isOwner && isGroupBooking) {
-      // if is group booking and user is not owner
-      hideMakeChange = true;
-    } else if (isOwner && !isGroupBooking) {
-      // if not group booking and user is owner
-      hideMakeChange = false;
-    } else if (!isOwner && !isGroupBooking) {
-      // if not owner and not group booking
-      hideMakeChange = false;
-    }
-
-    return hideMakeChange;
+    return isOwner ? false : true;
   }
 
   const subject = t(props.subject || "confirmed_event_type_subject", {
@@ -79,11 +63,7 @@ export const BaseScheduledEmail = (
               <ManageLink
                 attendee={props.attendee}
                 calEvent={props.calEvent}
-                hide={hideMakeChange(
-                  props.calEvent.attendees,
-                  props.calEvent.organizer.email,
-                  props.attendee.email
-                )}
+                hide={hideMakeChange(props.calEvent.organizer.email, props.attendee.email)}
               />
             )
       }
