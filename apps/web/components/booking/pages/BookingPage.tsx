@@ -156,6 +156,7 @@ const BookingPage = ({
           bookingId: id,
           isSuccessBookingPage: true,
           attendeeEmail: bookingForm.getValues("email"),
+          isGroupBooking: eventType.seatsPerTimeSlot ? true : false,
         },
       });
     },
