@@ -147,6 +147,7 @@ export default function Success(props: SuccessProps) {
     listingStatus,
     status,
     isSuccessBookingPage,
+    isGroupBooking,
   } = router.query;
   const location = Array.isArray(_location) ? _location[0] : _location;
   const [is24h, setIs24h] = useState(isBrowserLocale24h());
@@ -181,7 +182,6 @@ export default function Success(props: SuccessProps) {
   const eventName = getEventName(eventNameObject, true);
   const needsConfirmation = eventType.requiresConfirmation && reschedule != "true";
   const isCancelled = status === "CANCELLED" || status === "REJECTED";
-  const isGroupBooking = (bookingInfo && bookingInfo?.attendees.length > 1) || false;
   const isOwner = (bookingInfo && bookingInfo?.user && bookingInfo?.user.email == attendeeEmail) || false;
   let hideMakeChange = false;
 
