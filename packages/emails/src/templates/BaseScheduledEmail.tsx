@@ -73,12 +73,19 @@ export const BaseScheduledEmail = (
           : "your_event_has_been_scheduled"
       )}
       callToAction={
-        props.callToAction === null ? null : props.callToAction ||
-          hideMakeChange(props.calEvent.attendees, props.calEvent.organizer.email, props.attendee.email) ? (
-          <ManageLink attendee={props.attendee} calEvent={props.calEvent} />
-        ) : (
-          <></>
-        )
+        props.callToAction === null
+          ? null
+          : props.callToAction || (
+              <ManageLink
+                attendee={props.attendee}
+                calEvent={props.calEvent}
+                hide={hideMakeChange(
+                  props.calEvent.attendees,
+                  props.calEvent.organizer.email,
+                  props.attendee.email
+                )}
+              />
+            )
       }
       subtitle={props.subtitle || <>{t("emailed_you_and_any_other_attendees")}</>}>
       <Info label={t("cancellation_reason")} description={props.calEvent.cancellationReason} withSpacer />

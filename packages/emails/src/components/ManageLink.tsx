@@ -1,7 +1,7 @@
 import { getCancelLink } from "@calcom/lib/CalEventParser";
 import type { CalendarEvent, Person } from "@calcom/types/Calendar";
 
-export function ManageLink(props: { calEvent: CalendarEvent; attendee: Person }) {
+export function ManageLink(props: { calEvent: CalendarEvent; attendee: Person; hide: boolean }) {
   // Only the original attendee can make changes to the event
   // Guests cannot
   const t = props.attendee.language.translate;
@@ -9,7 +9,9 @@ export function ManageLink(props: { calEvent: CalendarEvent; attendee: Person })
     props.attendee.email === props.calEvent.attendees[0].email ||
     props.calEvent.organizer.email === props.attendee.email
   ) {
-    return (
+    return props.hide ? (
+      <></>
+    ) : (
       <div
         style={{
           fontFamily: "Roboto, Helvetica, sans-serif",
