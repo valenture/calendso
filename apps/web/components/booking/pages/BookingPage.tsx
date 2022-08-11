@@ -872,6 +872,7 @@ const BookingPage = ({
                       className={inputClassName}
                       placeholder={t("share_additional_notes")}
                       disabled={disabledExceptForOwner}
+                      required
                     />
                   )}
                 </div>
