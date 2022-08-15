@@ -108,6 +108,7 @@ export default class GoogleCalendarService implements Calendar {
         reminders: {
           useDefault: true,
         },
+        guestsCanSeeOtherGuests: false,
       };
 
       if (calEventRaw.location) {
@@ -185,6 +186,7 @@ export default class GoogleCalendarService implements Calendar {
         reminders: {
           useDefault: true,
         },
+        guestsCanSeeOtherGuests: false,
       };
 
       if (event.location) {
@@ -200,8 +202,8 @@ export default class GoogleCalendarService implements Calendar {
           auth: myGoogleAuth,
           calendarId: externalCalendarId ? externalCalendarId : event.destinationCalendar?.externalId,
           eventId: uid,
-          sendNotifications: true,
-          sendUpdates: "all",
+          sendNotifications: false,
+          sendUpdates: "none",
           requestBody: payload,
         },
         function (err, event) {
