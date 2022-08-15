@@ -116,7 +116,7 @@ export const getCancelLink = (calEvent: CalendarEvent): string => {
   return WEBAPP_URL + "/cancel/" + getUid(calEvent);
 };
 
-export const getRichDescription = (calEvent: CalendarEvent /*, attendee?: Person*/, groupEvent?: false) => {
+export const getRichDescription = (calEvent: CalendarEvent /*, attendee?: Person*/, groupEvent?: boolean) => {
   return `
 ${getCancellationReason(calEvent)}
 ${getWhat(calEvent)}
