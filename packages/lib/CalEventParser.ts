@@ -116,21 +116,21 @@ export const getCancelLink = (calEvent: CalendarEvent): string => {
   return WEBAPP_URL + "/cancel/" + getUid(calEvent);
 };
 
-export const getRichDescription = (calEvent: CalendarEvent /*, attendee?: Person*/) => {
+export const getRichDescription = (calEvent: CalendarEvent /*, attendee?: Person*/, groupEvent?: false) => {
   return `
 ${getCancellationReason(calEvent)}
 ${getWhat(calEvent)}
 ${getWhen(calEvent)}
-${getWho(calEvent)}
+${groupEvent ? "" : getWho(calEvent)}
 ${calEvent.organizer.language.translate("where")}:
 ${getLocation(calEvent)}
 ${getDescription(calEvent)}
-${getAdditionalNotes(calEvent)}
+${groupEvent ? "" : getAdditionalNotes(calEvent)}
 ${getCustomInputs(calEvent)}
 ${
   // TODO: Only the original attendee can make changes to the event
   // Guests cannot
-  getManageLink(calEvent)
+  groupEvent ? "" : getManageLink(calEvent)
 }
 ${
   calEvent.paymentInfo
