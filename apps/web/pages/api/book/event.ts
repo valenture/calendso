@@ -544,6 +544,7 @@ async function handler(req: NextApiRequest) {
       },
       dynamicEventSlugRef,
       dynamicGroupSlugRef,
+      seatsPerTimeSlot: evt.seatsPerTimeSlot,
       user: {
         connect: {
           id: organizerUser.id,
