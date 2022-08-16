@@ -8,6 +8,7 @@ import classNames from "@calcom/lib/classNames";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import showToast from "@calcom/lib/notification";
 import { getEveryFreqFor } from "@calcom/lib/recurringStrings";
+import { Attendee } from "@calcom/prisma/client";
 import { inferQueryInput, inferQueryOutput, trpc } from "@calcom/trpc/react";
 import Button from "@calcom/ui/Button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader } from "@calcom/ui/Dialog";
@@ -364,14 +365,23 @@ function BookingListItem(booking: BookingItemProps) {
               {booking.attendees.length !== 0 && (
                 // show each attendee
                 <div className="flex flex-col">
-                  {booking.attendees.map((attendee, index) => (
-                    <div key={index} className="mb-1">
-                      <div>
-                        {attendee.name} ({attendee.email})
+                  {booking.attendees.map((attendee: Attendee, index: number) => {
+                    return (
+                      <div key={index} className="mb-1">
+                        <div>
+                          <strong>{attendee.name}</strong> ({attendee.email})
+                        </div>
+                        <div>{attendee.question}</div>
+                        {index < booking.attendees.length - 1 && (
+                          <div>
+                            -----------------------------------------------
+                            <br />
+                            <br />
+                          </div>
+                        )}
                       </div>
-                      <div>{attendee.question}</div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
