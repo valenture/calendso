@@ -108,6 +108,7 @@ export default class GoogleCalendarService implements Calendar {
         reminders: {
           useDefault: true,
         },
+        guestsCanSeeOtherGuests: false,
       };
 
       if (calEventRaw.location) {
@@ -172,7 +173,7 @@ export default class GoogleCalendarService implements Calendar {
       const myGoogleAuth = await auth.getToken();
       const payload: calendar_v3.Schema$Event = {
         summary: event.title,
-        description: getRichDescription(event),
+        description: getRichDescription(event, event.seatsPerTimeSlot === undefined),
         start: {
           dateTime: event.startTime,
           timeZone: event.organizer.timeZone,
@@ -185,6 +186,7 @@ export default class GoogleCalendarService implements Calendar {
         reminders: {
           useDefault: true,
         },
+        guestsCanSeeOtherGuests: false,
       };
 
       if (event.location) {
@@ -209,8 +211,8 @@ export default class GoogleCalendarService implements Calendar {
           auth: myGoogleAuth,
           calendarId: selectedCalendar,
           eventId: uid,
-          sendNotifications: true,
-          sendUpdates: "all",
+          sendNotifications: false,
+          sendUpdates: "none",
           requestBody: payload,
           conferenceDataVersion: 1,
         },

@@ -1,6 +1,7 @@
 import type { TFunction } from "next-i18next";
 
 import dayjs from "@calcom/dayjs";
+import { BookingInfo } from "@calcom/features/ee/workflows/lib/reminders/smsReminderManager";
 import type { CalendarEvent, Person } from "@calcom/types/Calendar";
 
 import {
@@ -31,6 +32,11 @@ export const BaseScheduledEmail = (
     return dayjs(props.calEvent.endTime).tz(timeZone).format(format);
   }
 
+  function hideMakeChange(organizerEmail: string, attendeeEmail: string) {
+    const isOwner = organizerEmail == attendeeEmail;
+    return isOwner ? false : true;
+  }
+
   const subject = t(props.subject || "confirmed_event_type_subject", {
     eventType: props.calEvent.type,
     name: props.calEvent.team?.name || props.calEvent.organizer.name,
@@ -53,17 +59,22 @@ export const BaseScheduledEmail = (
       callToAction={
         props.callToAction === null
           ? null
-          : props.callToAction || <ManageLink attendee={props.attendee} calEvent={props.calEvent} />
+          : props.callToAction || (
+              <ManageLink
+                attendee={props.attendee}
+                calEvent={props.calEvent}
+                hide={hideMakeChange(props.calEvent.organizer.email, props.attendee.email)}
+              />
+            )
       }
       subtitle={props.subtitle || <>{t("emailed_you_and_any_other_attendees")}</>}>
       <Info label={t("cancellation_reason")} description={props.calEvent.cancellationReason} withSpacer />
       <Info label={t("rejection_reason")} description={props.calEvent.rejectionReason} withSpacer />
       <Info label={t("what")} description={props.calEvent.type} withSpacer />
       <WhenInfo calEvent={props.calEvent} t={t} timeZone={timeZone} />
-      <WhoInfo calEvent={props.calEvent} t={t} />
+      <WhoInfo calEvent={props.calEvent} t={t} recieverEmail={props.attendee.email} />
       <LocationInfo calEvent={props.calEvent} t={t} />
       <Info label={t("description")} description={props.calEvent.description} withSpacer />
-      <Info label={t("additional_notes")} description={props.calEvent.additionalNotes} withSpacer />
       <CustomInputs calEvent={props.calEvent} />
     </BaseEmailHtml>
   );

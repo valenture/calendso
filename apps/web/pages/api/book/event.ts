@@ -422,6 +422,7 @@ async function handler(req: NextApiRequest) {
             name: invitee[0].name,
             timeZone: invitee[0].timeZone,
             locale: invitee[0].language.locale,
+            question: reqBody.notes,
           },
         },
       },
@@ -550,6 +551,7 @@ async function handler(req: NextApiRequest) {
               email: attendee.email,
               timeZone: attendee.timeZone,
               locale: attendee.language.locale,
+              question: reqBody.notes,
             };
             return retObj;
           }),
@@ -557,6 +559,7 @@ async function handler(req: NextApiRequest) {
       },
       dynamicEventSlugRef,
       dynamicGroupSlugRef,
+      seatsPerTimeSlot: evt.seatsPerTimeSlot,
       user: {
         connect: {
           id: organizerUser.id,

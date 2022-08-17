@@ -251,6 +251,7 @@ model Attendee {
   locale    String?  @default("en")
   booking   Booking? @relation(fields: [bookingId], references: [id])
   bookingId Int?
+  question  String?
 }
 
 enum BookingStatus {
@@ -300,6 +301,7 @@ model Booking {
   recurringEventId      String?
   smsReminderNumber     String?
   workflowReminders     WorkflowReminder[]
+  seatsPerTimeSlot      Int?
 }
 
 model Schedule {

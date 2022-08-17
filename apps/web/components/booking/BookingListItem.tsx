@@ -8,6 +8,7 @@ import classNames from "@calcom/lib/classNames";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import showToast from "@calcom/lib/notification";
 import { getEveryFreqFor } from "@calcom/lib/recurringStrings";
+import { Attendee } from "@calcom/prisma/client";
 import { inferQueryInput, inferQueryOutput, trpc } from "@calcom/trpc/react";
 import Button from "@calcom/ui/Button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader } from "@calcom/ui/Dialog";
@@ -333,8 +334,8 @@ function BookingListItem(booking: BookingItemProps) {
             </div>
           </div>
         </td>
-        <td className={"flex-1 ltr:pl-4 rtl:pr-4" + (isRejected ? " line-through" : "")} onClick={onClick}>
-          <div className="cursor-pointer py-4">
+        <td className={"flex-1 ltr:pl-4 rtl:pr-4" + (isRejected ? " line-through" : "")}>
+          <div className="py-4">
             <div className="sm:hidden">
               {isPending && <Tag className="mb-2 ltr:mr-2 rtl:ml-2">{t("unconfirmed")}</Tag>}
               {!!booking?.eventType?.price && !booking.paid && (
@@ -360,22 +361,30 @@ function BookingListItem(booking: BookingItemProps) {
               )}
               {isPending && <Tag className="hidden ltr:ml-2 rtl:mr-2 sm:inline-flex">{t("unconfirmed")}</Tag>}
             </div>
-            {booking.description && (
-              <div
-                className="max-w-52 md:max-w-96 truncate text-sm text-gray-500"
-                title={booking.description}>
-                &quot;{booking.description}&quot;
-              </div>
-            )}
-
-            {booking.attendees.length !== 0 && (
-              <a
-                className="text-sm text-gray-900 hover:text-blue-500"
-                href={"mailto:" + booking.attendees[0].email}
-                onClick={(e) => e.stopPropagation()}>
-                {booking.attendees[0].email}
-              </a>
-            )}
+            <div className="text-sm">
+              {booking.attendees.length !== 0 && (
+                // show each attendee
+                <div className="flex flex-col">
+                  {booking.attendees.map((attendee: Attendee, index: number) => {
+                    return (
+                      <div key={index} className="mb-1">
+                        <div>
+                          <strong>{attendee.name}</strong> ({attendee.email})
+                        </div>
+                        <div>{attendee.question}</div>
+                        {index < booking.attendees.length - 1 && (
+                          <div>
+                            -----------------------------------------------
+                            <br />
+                            <br />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
             {isCancelled && booking.rescheduled && (
               <div className="mt-2 inline-block text-left text-sm md:hidden">
                 <RequestSentMessage />

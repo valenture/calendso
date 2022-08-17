@@ -155,6 +155,8 @@ const BookingPage = ({
           eventName: profile.eventName || "",
           bookingId: id,
           isSuccessBookingPage: true,
+          attendeeEmail: bookingForm.getValues("email"),
+          isGroupBooking: eventType.seatsPerTimeSlot ? true : false,
         },
       });
     },
@@ -616,7 +618,7 @@ const BookingPage = ({
             </div>
             <div className="p-6 sm:w-1/2">
               <Form form={bookingForm} handleSubmit={bookEvent}>
-                <div className="mb-4">
+                <div className={"mb-4 " + (router.query.name != null ? "hidden" : "")}>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-white">
                     {t("your_name")}
                   </label>
@@ -633,7 +635,7 @@ const BookingPage = ({
                     />
                   </div>
                 </div>
-                <div className="mb-4">
+                <div className={"mb-4 " + (router.query.email != null ? "hidden" : "")}>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-white">
                     {t("email_address")}
                   </label>
@@ -887,6 +889,7 @@ const BookingPage = ({
                       className={inputClassName}
                       placeholder={t("share_additional_notes")}
                       disabled={disabledExceptForOwner}
+                      required
                     />
                   )}
                 </div>
