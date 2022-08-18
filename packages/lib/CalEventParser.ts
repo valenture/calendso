@@ -118,19 +118,7 @@ export const getCancelLink = (calEvent: CalendarEvent): string => {
 
 export const getRichDescription = (calEvent: CalendarEvent /*, attendee?: Person*/, groupEvent?: boolean) => {
   return `
-${getCancellationReason(calEvent)}
-${getWhat(calEvent)}
-${getWhen(calEvent)}
-${getWho(calEvent)}
-${getDescription(calEvent)}
-${
-  calEvent.paymentInfo
-    ? `
-${calEvent.organizer.language.translate("pay_now")}:
-${calEvent.paymentInfo.link}
-`
-    : ""
-}
+${calEvent.description}
   `.trim();
 };
 
