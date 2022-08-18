@@ -122,14 +122,7 @@ ${getCancellationReason(calEvent)}
 ${getWhat(calEvent)}
 ${getWhen(calEvent)}
 ${getWho(calEvent)}
-${calEvent.organizer.language.translate("where")}:
-${getLocation(calEvent)}
 ${getDescription(calEvent)}
-${
-  // TODO: Only the original attendee can make changes to the event
-  // Guests cannot
-  groupEvent ? "" : getManageLink(calEvent)
-}
 ${
   calEvent.paymentInfo
     ? `
