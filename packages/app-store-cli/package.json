@@ -21,10 +21,10 @@
     "ink-select-input": "^4.2.1",
     "ink-text-input": "^4.0.3",
     "meow": "^9.0.0",
-    "react": "18.1.0"
+    "react": "18.1.0",
+    "chokidar": "^3.5.3"
   },
   "devDependencies": {
-    "chokidar": "^3.5.3",
     "@types/react": "^18.0.9",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
