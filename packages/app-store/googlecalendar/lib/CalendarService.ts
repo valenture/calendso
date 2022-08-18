@@ -182,7 +182,10 @@ export default class GoogleCalendarService implements Calendar {
           dateTime: event.endTime,
           timeZone: event.organizer.timeZone,
         },
-        attendees: [{ ...event.organizer, organizer: true, responseStatus: "accepted" }, ...event.attendees],
+        attendees: [
+          { ...event.organizer, organizer: true, responseStatus: "accepted" },
+          ...event.attendees.map((attendee) => ({ ...attendee, responseStatus: "accepted" })),
+        ],
         reminders: {
           useDefault: true,
         },
@@ -206,49 +209,73 @@ export default class GoogleCalendarService implements Calendar {
         ? externalCalendarId
         : event.destinationCalendar?.externalId;
 
-      calendar.events.update(
+      calendar.events.get(
         {
           auth: myGoogleAuth,
           calendarId: selectedCalendar,
           eventId: uid,
-          sendNotifications: false,
-          sendUpdates: "none",
-          requestBody: payload,
-          conferenceDataVersion: 1,
         },
-        function (err, evt) {
-          if (err) {
-            console.error("There was an error contacting google calendar service: ", err);
+        function (error, originalGoogleEvent) {
+          // VI - Adding the original conference data to the event to be updated
 
-            return reject(err);
+          if (error || !originalGoogleEvent?.data) {
+            console.error("There was an error contacting google calendar service: ", error);
+            return reject(error);
           }
 
-          if (evt && evt.data.id && evt.data.hangoutLink && event.location === "integrations:google:meet") {
-            calendar.events.patch({
-              // Update the same event but this time we know the hangout link
-              calendarId: selectedCalendar,
+          if (originalGoogleEvent && originalGoogleEvent.data.conferenceData) {
+            payload["conferenceData"] = originalGoogleEvent.data.conferenceData;
+          }
+
+          calendar.events.update(
+            {
               auth: myGoogleAuth,
-              eventId: evt.data.id || "",
-              requestBody: {
-                description: getRichDescription({
-                  ...event,
-                  additionalInformation: { hangoutLink: evt.data.hangoutLink },
-                }),
-              },
-            });
-            return resolve({
-              uid: "",
-              ...evt.data,
-              id: evt.data.id || "",
-              additionalInfo: {
-                hangoutLink: evt.data.hangoutLink || "",
-              },
-              type: "google_calendar",
-              password: "",
-              url: "",
-            });
-          }
-          return resolve(evt?.data);
+              calendarId: selectedCalendar,
+              eventId: uid,
+              sendNotifications: false,
+              sendUpdates: "none",
+              requestBody: payload,
+              conferenceDataVersion: 1,
+            },
+            function (err, evt) {
+              if (err) {
+                console.error("There was an error contacting google calendar service: ", err);
+
+                return reject(err);
+              }
+
+              if (
+                originalGoogleEvent &&
+                originalGoogleEvent.data.id &&
+                originalGoogleEvent.data.hangoutLink
+              ) {
+                calendar.events.patch({
+                  // Update the same event but this time we know the hangout link
+                  calendarId: selectedCalendar,
+                  auth: myGoogleAuth,
+                  eventId: originalGoogleEvent.data.id || "",
+                  requestBody: {
+                    description: getRichDescription({
+                      ...event,
+                      additionalInformation: { hangoutLink: originalGoogleEvent.data.hangoutLink },
+                    }),
+                  },
+                });
+                return resolve({
+                  uid: "",
+                  ...originalGoogleEvent.data,
+                  id: originalGoogleEvent.data.id || "",
+                  additionalInfo: {
+                    hangoutLink: originalGoogleEvent.data.hangoutLink || "",
+                  },
+                  type: "google_calendar",
+                  password: "",
+                  url: "",
+                });
+              }
+              return resolve(evt?.data);
+            }
+          );
         }
       );
     });

@@ -221,7 +221,7 @@ const BookingPage = ({
     : [];
 
   // There should only exists one default userData variable for primaryAttendee.
-  const defaultUserValues = {
+  let defaultUserValues = {
     email: booking?.attendees[0].email
       ? booking.attendees[0].email
       : router.query.email
@@ -232,6 +232,12 @@ const BookingPage = ({
       : router.query.name
       ? (router.query.name as string)
       : "",
+  };
+
+  // VI - we dont want the first attendees pre-filled in
+  defaultUserValues = {
+    name: router.query.name ? (router.query.name as string) : "",
+    email: router.query.email ? (router.query.email as string) : "",
   };
 
   const defaultValues = () => {
