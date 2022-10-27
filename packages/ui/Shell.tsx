@@ -180,12 +180,12 @@ const Layout = ({
         },
       ],
     },
-    {
-      name: t("settings"),
-      href: "/settings/profile",
-      icon: Icon.FiSettings,
-      current: router.asPath.startsWith("/settings"),
-    },
+    // {
+    //   name: t("settings"),
+    //   href: "/settings/profile",
+    //   icon: Icon.FiSettings,
+    //   current: router.asPath.startsWith("/settings"),
+    // },
   ];
   const pageTitle = typeof props.heading === "string" ? props.heading : props.title;
 
