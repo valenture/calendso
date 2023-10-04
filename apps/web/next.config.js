@@ -141,11 +141,11 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   /* We already do type check on GH actions */
   typescript: {
-    ignoreBuildErrors: !!process.env.CI,
+    ignoreBuildErrors: true,
   },
   /* We already do linting on GH actions */
   eslint: {
-    ignoreDuringBuilds: !!process.env.CI,
+    ignoreDuringBuilds: true,
   },
   transpilePackages: [
     "@calcom/app-store",
