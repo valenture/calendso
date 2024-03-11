@@ -35,6 +35,8 @@ export function getOrgSlug(hostname: string, forcedSlug?: string) {
   const currentHostname = ALLOWED_HOSTNAMES.find((ahn) => {
     const url = new URL(WEBAPP_URL);
     const testHostname = `${url.hostname}${url.port ? `:${url.port}` : ""}`;
+    log.warn("Testing hostname", { testHostname, ahn });
+
     return testHostname.endsWith(`.${ahn}`);
   });
 
@@ -46,6 +48,7 @@ export function getOrgSlug(hostname: string, forcedSlug?: string) {
   const slug = hostname.replace(`.${currentHostname}` ?? "", "");
   const hasNoDotInSlug = slug.indexOf(".") === -1;
   if (hasNoDotInSlug) {
+    log.warn("Using derived slug", { WEBAPP_URL, ALLOWED_HOSTNAMES, slug });
     return slug;
   }
   log.warn("Derived slug ended up having dots, so not considering it an org domain", { slug });
